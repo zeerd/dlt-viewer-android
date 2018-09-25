@@ -25,9 +25,15 @@ So I use some special way to build this project.
 ## Refrence:
 
 [How to make Android apps without IDE from command line](https://medium.com/@authmane512/how-to-build-an-apk-from-command-line-without-ide-7260e1e22676)
+
 [Building an Android Command-Line Application Using the NDK Build Tools](https://software.intel.com/en-us/articles/building-an-android-command-line-application-using-the-ndk-build-tools)
+
 [Find the files in jni-folder from dlt-daemon 2.17.0](https://github.com/GENIVI/dlt-daemon)
+
 [Framework comes from google npk sample](https://github.com/googlesamples/android-ndk/tree/master/hello-jniCallback)
+
 [How to add rows dynamically into table layout](https://stackoverflow.com/questions/5183968/how-to-add-rows-dynamically-into-table-layout)
+
 [Scroll to last line of TableLayout within a ScrollView](https://stackoverflow.com/questions/3087877/scroll-to-last-line-of-tablelayout-within-a-scrollview)
+
 [How can I create a table with borders in Android?](https://stackoverflow.com/questions/2108456/how-can-i-create-a-table-with-borders-in-android)
