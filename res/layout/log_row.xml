@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+      <TextView
+          android:id="@+id/log_timestamp"
+          android:background="@drawable/border"
+          android:textStyle="normal"/>
+      <TextView
+          android:id="@+id/log_ecuid"
+          android:background="@drawable/border"
+          android:textStyle="normal"/>
+      <TextView
+          android:id="@+id/log_apid"
+          android:background="@drawable/border"
+          android:textStyle="normal"/>
+      <TextView
+          android:id="@+id/log_ctid"
+          android:background="@drawable/border"
+          android:textStyle="normal"/>
+      <TextView
+          android:id="@+id/log_payload"
+          android:layout_height="wrap_content"
+          android:layout_width="match_parent"
+          android:layout_weight="1"
+          android:background="@drawable/border"
+          android:singleLine="false"
+          android:textStyle="normal"/>
+</TableRow>
