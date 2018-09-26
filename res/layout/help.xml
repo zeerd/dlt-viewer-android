@@ -1,0 +1,85 @@
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:orientation="vertical" >
+  <ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="none"
+    android:id="@+id/help_scroll"
+    android:layout_weight="1">
+      <TableLayout  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:id="@+id/log_table"
+         android:stretchColumns="1*" >
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="dlt-viewer-android"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="The Diagnostic Log and Trace Viewer for Android is an application that can receive messages from the DLT daemon with filter."
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="DLT, short for Diagnostic Log and Trace, provides a log and trace interface, based on the standardised protocol specified in the AUTOSAR standard 4.0 DLT."
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="https://github.com/GENIVI/dlt-daemon"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="https://github.com/GENIVI/dlt-viewer"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="https://github.com/zeerd/dlt-viewer-android"
+            android:textStyle="normal"
+            />
+        </TableRow>
+      </TableLayout>
+  </ScrollView>
+  <LinearLayout 
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/exit"
+        android:onClick="returnHelp" />
+  </LinearLayout>
+</LinearLayout>

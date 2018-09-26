@@ -19,6 +19,8 @@ mv src/com/zeerd/dltviewer/R.java java/src/com/zeerd/dltviewer/R.java
 
 echo "Compiling..."
 install -d obj
+javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/SettingActivity.java
+javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/HelpActivity.java
 javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/MainActivity.java
 javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/R.java
 

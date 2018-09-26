@@ -64,51 +64,9 @@ LogContext g_ctx;
 
 static char *default_ip = "192.168.42.210";
 static char *ip = NULL;
-static pthread_t       threadInfo_;
-static DltClient      dltclient;
-
-/* This is a trivial JNI example where we use a native method
- * to return a new VM String. See the corresponding Java source
- * file located at:
- *
- *   hello-jniCallback/app/src/main/java/com/example/hellojnicallback/MainActivity.java
- */
-JNIEXPORT jstring JNICALL
-Java_com_zeerd_dltviewer_MainActivity_stringFromJNI( JNIEnv* env, jobject thiz )
-{
-#if defined(__arm__)
-    #if defined(__ARM_ARCH_7A__)
-    #if defined(__ARM_NEON__)
-      #if defined(__ARM_PCS_VFP)
-        #define ABI "armeabi-v7a/NEON (hard-float)"
-      #else
-        #define ABI "armeabi-v7a/NEON"
-      #endif
-    #else
-      #if defined(__ARM_PCS_VFP)
-        #define ABI "armeabi-v7a (hard-float)"
-      #else
-        #define ABI "armeabi-v7a"
-      #endif
-    #endif
-  #else
-   #define ABI "armeabi"
-  #endif
-#elif defined(__i386__)
-#define ABI "x86"
-#elif defined(__x86_64__)
-#define ABI "x86_64"
-#elif defined(__mips64)  /* mips64el-* toolchain defines __mips__ too */
-#define ABI "mips64"
-#elif defined(__mips__)
-#define ABI "mips"
-#elif defined(__aarch64__)
-#define ABI "arm64-v8a"
-#else
-#define ABI "unknown"
-#endif
-    return (*env)->NewStringUTF(env, "Hello from JNI !  Compiled with ABI " ABI ".");
-}
+static pthread_t threadInfo_;
+static DltClient dltclient;
+static DltFilter dltfilter;
 
 /*
  *  A helper function to show how to call
@@ -248,13 +206,16 @@ int dlt_receive_message_callback(DltMessage *message, void *data)
         dlt_set_storageheader(message->storageheader,"AECU");
     }
 
-    dlt_message_header(message,text,DLT_RECEIVE_TEXTBUFSIZE, 0);
-    sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "header");
-    sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, text);
+    if(dlt_message_filter_check(message,&(dltfilter),0) == DLT_RETURN_TRUE) {
 
-    dlt_message_payload(message,text,DLT_RECEIVE_TEXTBUFSIZE,DLT_OUTPUT_ASCII,0);
-    sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "payload");
-    sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, text);
+        dlt_message_header(message,text,DLT_RECEIVE_TEXTBUFSIZE, 0);
+        sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "header");
+        sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, text);
+
+        dlt_message_payload(message,text,DLT_RECEIVE_TEXTBUFSIZE,DLT_OUTPUT_ASCII,0);
+        sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "payload");
+        sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, text);
+    }
 
     return 0;
 }
@@ -375,4 +336,22 @@ Java_com_zeerd_dltviewer_MainActivity_SetDltServerIp(
     ip = strdup((*env)->GetStringUTFChars(env, ip_in, NULL));
 
     LOGI("set ip to jni: %s\n", ip);
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_MainActivity_SetDltServerFilter(
+                    JNIEnv *env, jobject instance, jstring filter_in) {
+
+    char *filter = (*env)->GetStringUTFChars(env, filter_in, NULL);
+
+    LOGI("set filter to jni: %s\n", filter);
+
+    dlt_filter_init(&(dltfilter), 0);
+    if (filter)
+    {
+        if (dlt_filter_load(&(dltfilter), filter, 0) < DLT_RETURN_OK)
+        {
+            return;
+        }
+    }
 }

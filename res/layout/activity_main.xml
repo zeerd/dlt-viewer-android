@@ -5,29 +5,34 @@
 
   <LinearLayout 
       android:orientation="horizontal"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       >
       <EditText
-          android:id="@+id/ip"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:padding="10dp"
-          android:textSize="8dp"
-          />
-      <CheckBox android:id="@+id/checkbox_conn"
-        android:layout_width="wrap_content"
+        android:id="@+id/ip"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:textSize="8dp"
+        />
+      <CheckBox android:id="@+id/checkbox_conn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="@string/conn"/>
       <Button
         android:id="@+id/save"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Save" />
-      <CheckBox android:id="@+id/checkbox_scroll"
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/save" />
+     <Button
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/scroll"/>
+        android:layout_weight="1"
+        android:text="@string/setting"
+        android:onClick="showPopup" />
   </LinearLayout >
 
   <ScrollView
@@ -41,29 +46,16 @@
          android:layout_height="match_parent"
          android:id="@+id/log_table"
          android:stretchColumns="1*" >
-            <TableRow>
-              <TextView
-                  android:id="@+id/log_timestamp"
-                  android:textStyle="normal"/>
-              <TextView
-                  android:id="@+id/log_ecuid"
-                  android:textStyle="normal"/>
-              <TextView
-                  android:id="@+id/log_apid"
-                  android:textStyle="normal"/>
-              <TextView
-                  android:id="@+id/log_ctid"
-                  android:textStyle="normal"/>
-              <TextView
-                  android:id="@+id/log_subtype"
-                  android:textStyle="normal"/>
-              <TextView
-                  android:id="@+id/log_payload"
-                  android:layout_height="wrap_content"
-                  android:background="@drawable/border"
-                  android:singleLine="false"
-                  android:textStyle="normal"/>
-            </TableRow>
     </TableLayout>
   </ScrollView>
+  <LinearLayout 
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+      <CheckBox android:id="@+id/checkbox_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scroll"/>
+  </LinearLayout>
 </LinearLayout>

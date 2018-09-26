@@ -17,12 +17,18 @@ package com.zeerd.dltviewer;
 
 //import android.support.annotation.Keep;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.format.Formatter;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +44,7 @@ import android.widget.ScrollView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.PopupMenu;
 import com.zeerd.dltviewer.R;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -92,33 +99,36 @@ public class MainActivity extends Activity {
                     else if(type == 1) {
                         String[] splited = sHeader.split("\\s+");
 
-                        TableLayout table = (TableLayout)MainActivity.this.findViewById(R.id.log_table);
+                        if(!splited[7].equals("control")) {
 
-                        // Inflate your row "template" and fill out the fields.
-                        TableRow row = (TableRow)LayoutInflater.from(MainActivity.this).inflate(R.layout.log_row, null);
-                        ((TextView)row.findViewById(R.id.log_timestamp)).setText(splited[2]);
-                        ((TextView)row.findViewById(R.id.log_ecuid)).setText(splited[4]);
-                        ((TextView)row.findViewById(R.id.log_apid)).setText(splited[5]);
-                        ((TextView)row.findViewById(R.id.log_ctid)).setText(splited[6]);
-                        ((TextView)row.findViewById(R.id.log_subtype)).setText(splited[8]);
-                        ((TextView)row.findViewById(R.id.log_payload)).setText(string);
-                        if(splited[8].equals("error") || splited[8].equals("fatal")) {
-                            ((TextView)row.findViewById(R.id.log_payload)).setBackgroundResource(R.drawable.border_red);
-                        }
-                        if(splited[8].equals("warn")) {
-                            ((TextView)row.findViewById(R.id.log_payload)).setBackgroundResource(R.drawable.border_yellow);
-                        }
-                        table.addView(row);
+                            TableLayout table = (TableLayout)MainActivity.this.findViewById(R.id.log_table);
 
-                        table.requestLayout();     // Not sure if this is needed.
+                            // Inflate your row "template" and fill out the fields.
+                            TableRow row = (TableRow)LayoutInflater.from(MainActivity.this).inflate(R.layout.log_row, null);
+                            ((TextView)row.findViewById(R.id.log_timestamp)).setText(splited[2]);
+                            ((TextView)row.findViewById(R.id.log_ecuid)).setText(splited[4]);
+                            ((TextView)row.findViewById(R.id.log_apid)).setText(splited[5]);
+                            ((TextView)row.findViewById(R.id.log_ctid)).setText(splited[6]);
+                            ((TextView)row.findViewById(R.id.log_subtype)).setText(splited[8]);
+                            ((TextView)row.findViewById(R.id.log_payload)).setText(string);
+                            if(splited[8].equals("error") || splited[8].equals("fatal")) {
+                                ((TextView)row.findViewById(R.id.log_payload)).setBackgroundResource(R.drawable.border_red);
+                            }
+                            if(splited[8].equals("warn")) {
+                                ((TextView)row.findViewById(R.id.log_payload)).setBackgroundResource(R.drawable.border_yellow);
+                            }
+                            table.addView(row);
 
-                        if(checkBox.isChecked()) {
-                            scrollView.post(new Runnable() {            
-                                @Override
-                                public void run() {
-                                    scrollView.fullScroll(View.FOCUS_DOWN);              
-                                }
-                            });
+                            table.requestLayout();     // Not sure if this is needed.
+
+                            if(checkBox.isChecked()) {
+                                scrollView.post(new Runnable() {            
+                                    @Override
+                                    public void run() {
+                                        scrollView.fullScroll(View.FOCUS_DOWN);              
+                                    }
+                                });
+                            }
                         }
                     }
                     type = 2;
@@ -132,7 +142,13 @@ public class MainActivity extends Activity {
         scrollView = (ScrollView)MainActivity.this.findViewById(R.id.log_scroll);
 
         ip = (EditText)MainActivity.this.findViewById(R.id.ip);
-        ip.setText("192.168.42.210");
+        String wifiIP = getDeviceWiFiIP();
+        if(!wifiIP.equals("0.0.0.1")) {
+            ip.setText(wifiIP);
+        }
+        else {
+            ip.setText("192.168.42.210");
+        }
         SetDltServerIp(ip.getText().toString());
 
         checkBox = (CheckBox)MainActivity.this.findViewById(R.id.checkbox_scroll);
@@ -155,13 +171,6 @@ public class MainActivity extends Activity {
 
         addListenerOnButton();
 
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        //((TextView)findViewById(R.id.hellojniMsg)).setText(stringFromJNI());
-        //startLogs();
-
         TableLayout table = (TableLayout)MainActivity.this.findViewById(R.id.log_table);
 
         // Inflate your row "template" and fill out the fields.
@@ -176,6 +185,16 @@ public class MainActivity extends Activity {
 
         table.requestLayout();     // Not sure if this is needed.
 
+        String filter = getExternalCacheDir() + "/my.filter";
+        SetDltServerFilter(filter);
+
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        //((TextView)findViewById(R.id.hellojniMsg)).setText(stringFromJNI());
+        //startLogs();
+
         Log.i(TAG, "onResume");
     }
 
@@ -186,6 +205,31 @@ public class MainActivity extends Activity {
 
         Log.i(TAG, "onPause");
     }  
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v, Gravity.NO_GRAVITY);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.setting, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.setting: {
+                        Intent intent = new Intent(getBaseContext(), SettingActivity.class);
+                        startActivity(intent);
+                    }
+                    return true;
+                    case R.id.help: {
+                        Intent intent = new Intent(getBaseContext(), HelpActivity.class);
+                        startActivity(intent);
+                    }
+                    return true;
+                    default:
+                    return false;
+                }
+            }
+        });
+        popup.show();
+    }
 
     public void addListenerOnButton() {
 
@@ -265,13 +309,23 @@ public class MainActivity extends Activity {
         } 
     }
 
+    public String getDeviceWiFiIP()
+    {
+        WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+        int ip = wifiInfo.getIpAddress();
+
+        String[] ips = Formatter.formatIpAddress(ip).split("\\.");
+        return ips [0] + "." + ips [1] + "." + ips [2] + ".1";
+    }
+
     static {
         System.loadLibrary("dlt-jnicallback");
     }
-    public native  String stringFromJNI();
     public native void startLogs();
     public native void StopLogs();
     public native void SetDltServerIp(String ip);
+    public native void SetDltServerFilter(String file);
 
     private static final String TAG = "DLT-Viewer";
     private static Handler staticHandler;

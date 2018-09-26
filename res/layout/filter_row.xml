@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+  <EditText
+      android:id="@+id/filter_apid"
+      android:text="----"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:padding="10dp"
+      android:textSize="20dp"
+      android:textColor="#000000"/>
+  <EditText
+      android:id="@+id/filter_ctid"
+      android:text="----"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:padding="10dp"
+      android:textSize="20dp"
+      android:textColor="#000000"/>
+  <Button
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:padding="10dp"
+      android:textSize="20dp"
+      android:text="@string/remove"
+      android:textColor="#000000"
+      android:onClick="removeFilter" />
+</TableRow>

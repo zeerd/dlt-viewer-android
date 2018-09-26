@@ -2,6 +2,7 @@
 
 ## Build
 I am not good at the android, and don't know how to use the android-studio.
+
 So I use some special way to build this project.
 
 ### Environment
@@ -18,7 +19,7 @@ So I use some special way to build this project.
 ### Build
 1. make a key for sign
 ```(shell)
-   $ keytool -genkeypair -validity 365 -keystore mykey.keystore -keyalg RSA -keysize 2048
+   $ keytool -genkeypair -validity 36500 -keystore mykey.keystore -keyalg RSA -keysize 2048
 ```
 2. run build.sh
 
@@ -37,3 +38,11 @@ So I use some special way to build this project.
 [Scroll to last line of TableLayout within a ScrollView](https://stackoverflow.com/questions/3087877/scroll-to-last-line-of-tablelayout-within-a-scrollview)
 
 [How can I create a table with borders in Android?](https://stackoverflow.com/questions/2108456/how-can-i-create-a-table-with-borders-in-android)
+
+[Get my wifi ip address Android](https://stackoverflow.com/questions/16730711/get-my-wifi-ip-address-android)
+
+[Android table column width 50 / 50](https://stackoverflow.com/questions/22383932/android-table-column-width-50-50)
+
+[How can I read a text file in Android?](https://stackoverflow.com/questions/12421814/how-can-i-read-a-text-file-in-android)
+
+

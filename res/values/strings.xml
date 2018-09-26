@@ -4,5 +4,11 @@
    <string name="scroll">Scroll</string>
    <string name="setting">Setting</string>
    <string name="help">Help</string>
+   <string name="save">Save</string>
+   <string name="remove">Remove</string>
+   <string name="add">Add</string>
+   <string name="load">Load</string>
+   <string name="exit">Return</string>
+   <string name="clear">Clear</string>
    <string name="conn">Connect</string>
 </resources>
