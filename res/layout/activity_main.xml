@@ -12,7 +12,18 @@
           android:id="@+id/ip"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:padding="10dp"
+          android:textSize="8dp"
           />
+      <CheckBox android:id="@+id/checkbox_conn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/conn"/>
+      <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save" />
       <CheckBox android:id="@+id/checkbox_scroll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,6 +53,9 @@
                   android:textStyle="normal"/>
               <TextView
                   android:id="@+id/log_ctid"
+                  android:textStyle="normal"/>
+              <TextView
+                  android:id="@+id/log_subtype"
                   android:textStyle="normal"/>
               <TextView
                   android:id="@+id/log_payload"

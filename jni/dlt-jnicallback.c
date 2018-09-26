@@ -64,6 +64,8 @@ LogContext g_ctx;
 
 static char *default_ip = "192.168.42.210";
 static char *ip = NULL;
+static pthread_t       threadInfo_;
+static DltClient      dltclient;
 
 /* This is a trivial JNI example where we use a native method
  * to return a new VM String. See the corresponding Java source
@@ -168,6 +170,12 @@ void queryRuntimeInfo(JNIEnv *env, jobject instance) {
  *     we rely on system to free all global refs when it goes away;
  *     the pairing function JNI_OnUnload() never gets called at all.
  */
+void thread_exit_handler(int sig)
+{ 
+    printf("this signal is %d \n", sig);
+    pthread_exit(0);
+}
+
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
     JNIEnv* env;
     memset(&g_ctx, 0, sizeof(g_ctx));
@@ -192,6 +200,16 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
     g_ctx.mainActivityObj = NULL;
 
     ip = default_ip;
+
+    struct sigaction actions;
+    memset(&actions, 0, sizeof(actions)); 
+    sigemptyset(&actions.sa_mask);
+    actions.sa_flags = 0; 
+    actions.sa_handler = thread_exit_handler;
+    sigaction(SIGUSR1,&actions,NULL);
+
+    pthread_mutex_init(&g_ctx.lock, NULL);
+
     return  JNI_VERSION_1_6;
 }
 
@@ -249,8 +267,6 @@ void*  UpdateLogs(void* context) {
     LogContext *pctx = (LogContext*) context;
     JavaVM *javaVM = pctx->javaVM;
 
-    DltClient      dltclient;
-
     LOGI("enter update Logs from jni\n");
 
     jint res = (*javaVM)->GetEnv(javaVM, (void**)&(pctx->env), JNI_VERSION_1_6);
@@ -292,13 +308,14 @@ void*  UpdateLogs(void* context) {
     }
     else {
         LOGE("dlt connect failed from jni\n");
+        sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "$disconnect$");
     }
-
-    pctx->done = 0;
 
     sendJavaMsg((pctx->env), pctx->jniHelperObj, pctx->statusId,
                 "LogerThread status: updating stopped");
     (*javaVM)->DetachCurrentThread(javaVM);
+
+    LOGI("quit update Logs from jni\n");
     return context;
 }
 
@@ -307,13 +324,10 @@ void*  UpdateLogs(void* context) {
  */
 JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_MainActivity_startLogs(JNIEnv *env, jobject instance) {
-    pthread_t       threadInfo_;
     pthread_attr_t  threadAttr_;
 
     pthread_attr_init(&threadAttr_);
     pthread_attr_setdetachstate(&threadAttr_, PTHREAD_CREATE_DETACHED);
-
-    pthread_mutex_init(&g_ctx.lock, NULL);
 
     jclass clz = (*env)->GetObjectClass(env, instance);
     g_ctx.mainActivityClz = (*env)->NewGlobalRef(env, clz);
@@ -336,16 +350,7 @@ Java_com_zeerd_dltviewer_MainActivity_startLogs(JNIEnv *env, jobject instance) {
 JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_MainActivity_StopLogs(JNIEnv *env, jobject instance) {
     pthread_mutex_lock(&g_ctx.lock);
-    g_ctx.done = 1;
-    pthread_mutex_unlock(&g_ctx.lock);
-
-    // waiting for updating thread to flip the done flag
-    struct timespec sleepTime;
-    memset(&sleepTime, 0, sizeof(sleepTime));
-    sleepTime.tv_nsec = 100000000;
-    while (g_ctx.done) {
-        nanosleep(&sleepTime, NULL);
-    }
+    dlt_client_cleanup(&dltclient, 0);
 
     // release object we allocated from StartLogs() function
     (*env)->DeleteGlobalRef(env, g_ctx.mainActivityClz);
@@ -353,7 +358,8 @@ Java_com_zeerd_dltviewer_MainActivity_StopLogs(JNIEnv *env, jobject instance) {
     g_ctx.mainActivityObj = NULL;
     g_ctx.mainActivityClz = NULL;
 
-    pthread_mutex_destroy(&g_ctx.lock);
+    pthread_mutex_unlock(&g_ctx.lock);
+//    pthread_mutex_destroy(&g_ctx.lock);
 
     LOGI("run stop Logs from jni\n");
 }

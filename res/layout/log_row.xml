@@ -17,6 +17,10 @@
           android:background="@drawable/border"
           android:textStyle="normal"/>
       <TextView
+          android:id="@+id/log_subtype"
+          android:background="@drawable/border"
+          android:textStyle="normal"/>
+      <TextView
           android:id="@+id/log_payload"
           android:layout_height="wrap_content"
           android:layout_width="match_parent"
