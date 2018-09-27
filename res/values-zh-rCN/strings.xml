@@ -1,8 +1,9 @@
 <resources>
    <string name="menu_settings">设置</string>
    <string name="title_activity_main">主界面</string>
-   <string name="scroll">滚动</string>
+   <string name="scroll">自动滚动</string>
    <string name="setting">设置</string>
+   <string name="filter">过滤</string>
    <string name="help">帮助</string>
    <string name="save">保存</string>
    <string name="remove">移除</string>
@@ -11,4 +12,8 @@
    <string name="exit">返回</string>
    <string name="clear">清除</string>
    <string name="conn">连接</string>
+   <string name="log_to_file">存文件</string>
+   <string name="control">控制</string>
+   <string name="default_level">默认Log级别</string>
+   <string name="ok">确定</string>
 </resources>

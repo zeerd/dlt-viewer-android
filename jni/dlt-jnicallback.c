@@ -1,19 +1,14 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * @licence app begin@
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This Source Code Form is subject to the terms of the
+ * Mozilla Public License (MPL), v. 2.0.
+ * If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @licence end@
  */
+
 #include <string.h>
 #include <inttypes.h>
 #include <pthread.h>
@@ -67,6 +62,7 @@ static char *ip = NULL;
 static pthread_t threadInfo_;
 static DltClient dltclient;
 static DltFilter dltfilter;
+static int ohandle = 0;
 
 /*
  *  A helper function to show how to call
@@ -129,7 +125,7 @@ void queryRuntimeInfo(JNIEnv *env, jobject instance) {
  *     the pairing function JNI_OnUnload() never gets called at all.
  */
 void thread_exit_handler(int sig)
-{ 
+{
     printf("this signal is %d \n", sig);
     pthread_exit(0);
 }
@@ -160,9 +156,9 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
     ip = default_ip;
 
     struct sigaction actions;
-    memset(&actions, 0, sizeof(actions)); 
+    memset(&actions, 0, sizeof(actions));
     sigemptyset(&actions.sa_mask);
-    actions.sa_flags = 0; 
+    actions.sa_flags = 0;
     actions.sa_handler = thread_exit_handler;
     sigaction(SIGUSR1,&actions,NULL);
 
@@ -216,6 +212,17 @@ int dlt_receive_message_callback(DltMessage *message, void *data)
         sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "payload");
         sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, text);
     }
+
+    pthread_mutex_lock(&g_ctx.lock);
+    if(ohandle > 0) {
+        struct iovec iov[2];
+        iov[0].iov_base = message->headerbuffer;
+        iov[0].iov_len = message->headersize;
+        iov[1].iov_base = message->databuffer;
+        iov[1].iov_len = message->datasize;
+        writev(ohandle, iov, 2);
+    }
+    pthread_mutex_unlock(&g_ctx.lock);
 
     return 0;
 }
@@ -309,7 +316,7 @@ Java_com_zeerd_dltviewer_MainActivity_startLogs(JNIEnv *env, jobject instance) {
  *    for a clean shutdown. The caller is from onPause
  */
 JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_MainActivity_StopLogs(JNIEnv *env, jobject instance) {
+Java_com_zeerd_dltviewer_MainActivity_stopLogs(JNIEnv *env, jobject instance) {
     pthread_mutex_lock(&g_ctx.lock);
     dlt_client_cleanup(&dltclient, 0);
 
@@ -326,7 +333,7 @@ Java_com_zeerd_dltviewer_MainActivity_StopLogs(JNIEnv *env, jobject instance) {
 }
 
 JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_MainActivity_SetDltServerIp(
+Java_com_zeerd_dltviewer_MainActivity_setDltServerIp(
                     JNIEnv *env, jobject instance, jstring ip_in) {
 
     if(ip != default_ip && ip != NULL) {
@@ -339,7 +346,7 @@ Java_com_zeerd_dltviewer_MainActivity_SetDltServerIp(
 }
 
 JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_MainActivity_SetDltServerFilter(
+Java_com_zeerd_dltviewer_MainActivity_setDltServerFilter(
                     JNIEnv *env, jobject instance, jstring filter_in) {
 
     char *filter = (*env)->GetStringUTFChars(env, filter_in, NULL);
@@ -354,4 +361,58 @@ Java_com_zeerd_dltviewer_MainActivity_SetDltServerFilter(
             return;
         }
     }
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_SettingActivity_setDltServerFilter(
+                    JNIEnv *env, jobject instance, jstring filter_in) {
+    Java_com_zeerd_dltviewer_MainActivity_setDltServerFilter(env, instance, filter_in);
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_MainActivity_startRecordLogs(JNIEnv *env, jobject instance, jstring file_in) {
+
+    char *file = (*env)->GetStringUTFChars(env, file_in, NULL);
+    LOGI("start to record logs : %s.\n", file);
+
+    ohandle = open(file, O_WRONLY|O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+    if(ohandle <= 0) {
+        LOGE("failed to open file : %s\n", file);
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_MainActivity_stopRecordLogs(JNIEnv *env, jobject instance) {
+
+    pthread_mutex_lock(&g_ctx.lock);
+    if (ohandle)
+    {
+        close(ohandle);
+        ohandle = -1;
+    }
+    pthread_mutex_unlock(&g_ctx.lock);
+    LOGI("stop to record logs.\n");
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_ControlActivity_setDefaultLevel(JNIEnv *env, jobject instance, jint level) {
+
+    dlt_client_send_default_log_level(&dltclient, (int)level);
+    LOGI("set default log level to %d.\n", (int)level);
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_ControlActivity_setAllLevel(JNIEnv *env, jobject instance, jint level) {
+
+    dlt_client_send_all_log_level(&dltclient, (int)level);
+    LOGI("set all log level to %d.\n", (int)level);
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_ControlActivity_setLevel(JNIEnv *env, jobject instance, jstring apid, jstring ctid, jint level) {
+
+    char *a = (*env)->GetStringUTFChars(env, apid, NULL);
+    char *c = (*env)->GetStringUTFChars(env, ctid, NULL);
+    dlt_client_send_log_level(&dltclient, a, c, (int)level);
+    LOGI("set [%s:%s] log level to %d.\n", a, c, (int)level);
 }

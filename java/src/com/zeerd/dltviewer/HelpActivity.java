@@ -1,3 +1,14 @@
+/*
+ * @licence app begin@
+ *
+ * This Source Code Form is subject to the terms of the
+ * Mozilla Public License (MPL), v. 2.0.
+ * If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * @licence end@
+ */
+
 package com.zeerd.dltviewer;
 
 import android.app.Activity;
@@ -14,10 +25,10 @@ public class HelpActivity extends Activity {
 
     private static final String TAG = "DLT-Viewer";
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.help);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.help);
 
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -25,9 +36,9 @@ public class HelpActivity extends Activity {
         } catch (NameNotFoundException e) {
             ((TextView)HelpActivity.this.findViewById(R.id.name)).setText("DLT-Viewer Android");
         }
-	}
+    }
 
     public void returnHelp(View v) {
-    	finish();
+        finish();
     }
 }

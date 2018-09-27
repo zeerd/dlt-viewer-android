@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/setting"
-          android:title="@string/setting"
+    <item android:id="@+id/filter"
+          android:title="@string/filter"
+          android:showAsAction="ifRoom"/>
+    <item android:id="@+id/control"
+          android:title="@string/control"
           android:showAsAction="ifRoom"/>
     <item android:id="@+id/help"
           android:title="@string/help" />

@@ -44,5 +44,3 @@ So I use some special way to build this project.
 [Android table column width 50 / 50](https://stackoverflow.com/questions/22383932/android-table-column-width-50-50)
 
 [How can I read a text file in Android?](https://stackoverflow.com/questions/12421814/how-can-i-read-a-text-file-in-android)
-
-

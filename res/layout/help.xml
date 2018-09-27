@@ -23,6 +23,16 @@
             android:textStyle="normal"
             />
         </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_weight="1"
+                android:background="#FF909090"
+                android:padding="2dip" />
+        </TableRow>
         <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
           <TextView
             android:layout_width="0dp"
@@ -40,6 +50,16 @@
             android:text="DLT, short for Diagnostic Log and Trace, provides a log and trace interface, based on the standardised protocol specified in the AUTOSAR standard 4.0 DLT."
             android:textStyle="normal"
             />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_weight="1"
+                android:background="#FF909090"
+                android:padding="2dip" />
         </TableRow>
         <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
           <TextView
@@ -70,7 +90,7 @@
         </TableRow>
       </TableLayout>
   </ScrollView>
-  <LinearLayout 
+  <LinearLayout
       android:orientation="horizontal"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

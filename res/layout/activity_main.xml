@@ -3,7 +3,7 @@
    android:layout_height="match_parent"
    android:orientation="vertical" >
 
-  <LinearLayout 
+  <LinearLayout
       android:orientation="horizontal"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -35,27 +35,34 @@
         android:onClick="showPopup" />
   </LinearLayout >
 
-  <ScrollView
+
+  <ListView
+    android:id="@+id/log_table"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:scrollbars="none"
-    android:id="@+id/log_scroll"
-    android:layout_weight="1">
-      <TableLayout  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:id="@+id/log_table"
-         android:stretchColumns="1*" >
-    </TableLayout>
-  </ScrollView>
-  <LinearLayout 
+    android:layout_weight="1"
+    />
+
+  <LinearLayout
       android:orientation="horizontal"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       >
       <CheckBox android:id="@+id/checkbox_scroll"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="@string/scroll"/>
+      <CheckBox android:id="@+id/checkbox_file"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/log_to_file"/>
+     <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/clear"
+        android:onClick="clearLogTable" />
   </LinearLayout>
 </LinearLayout>

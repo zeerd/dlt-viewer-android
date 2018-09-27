@@ -1,31 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
       <TextView
           android:id="@+id/log_timestamp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:singleLine="true"
           android:background="@drawable/border"
           android:textStyle="normal"/>
       <TextView
           android:id="@+id/log_ecuid"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
           android:background="@drawable/border"
           android:textStyle="normal"/>
       <TextView
           android:id="@+id/log_apid"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
           android:background="@drawable/border"
           android:textStyle="normal"/>
       <TextView
           android:id="@+id/log_ctid"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
           android:background="@drawable/border"
           android:textStyle="normal"/>
       <TextView
           android:id="@+id/log_subtype"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
           android:background="@drawable/border"
           android:textStyle="normal"/>
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
       <TextView
           android:id="@+id/log_payload"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_width="match_parent"
           android:layout_weight="1"
           android:background="@drawable/border"
           android:singleLine="false"
           android:textStyle="normal"/>
-</TableRow>
+    </LinearLayout>
+</LinearLayout>

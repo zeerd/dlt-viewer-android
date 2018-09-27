@@ -1,3 +1,14 @@
+/*
+ * @licence app begin@
+ *
+ * This Source Code Form is subject to the terms of the
+ * Mozilla Public License (MPL), v. 2.0.
+ * If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * @licence end@
+ */
+
 package com.zeerd.dltviewer;
 
 import android.app.Activity;
@@ -83,23 +94,23 @@ public class SettingActivity extends Activity {
                     }
                 }
             }
-            
+
 
             myOutWriter.close();
 
             fOut.flush();
             fOut.close();
 
-            Toast.makeText(getBaseContext(), 
+            Toast.makeText(getBaseContext(),
                             "Filter saved : " + filterPath + "/my.filter",
                                                 Toast.LENGTH_LONG).show();
 
-            SetDltServerFilter(filterPath + "/my.filter");
+            setDltServerFilter(filterPath + "/my.filter");
         }
         catch (IOException e)
         {
             Log.e("Exception", "File write failed: " + e.toString());
-        } 
+        }
 
     }
 
@@ -146,7 +157,7 @@ public class SettingActivity extends Activity {
             }
             br.close();
 
-            Toast.makeText(getBaseContext(), 
+            Toast.makeText(getBaseContext(),
                             "Filter loaded : " + filterPath + "/" + "my.filter",
                                                 Toast.LENGTH_LONG).show();
         }
@@ -162,6 +173,6 @@ public class SettingActivity extends Activity {
     static {
         System.loadLibrary("dlt-jnicallback");
     }
-    public native void SetDltServerFilter(String file);
+    public native void setDltServerFilter(String file);
 
 }
