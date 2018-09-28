@@ -25,7 +25,7 @@ javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.
 javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/ControlActivity.java
 javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/LogRow.java
 javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/LogTableAdapter.java
-javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/MainActivity.java
+javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 -Xlint:deprecation java/src/com/zeerd/dltviewer/MainActivity.java
 javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/R.java
 
 echo "Translating in Dalvik bytecode..."

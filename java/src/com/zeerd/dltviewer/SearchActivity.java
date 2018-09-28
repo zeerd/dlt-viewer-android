@@ -73,7 +73,7 @@ public class SearchActivity extends Activity {
             "com.zeerd.dltviewer.keyword",
             ((EditText)findViewById(R.id.keyword)).getText().toString()).apply();
         initTask = new TableInitTask(this,
-                    adapterLogs, MainActivity.logsList.size(), progressBar);
+                    adapterLogs, MainActivity.rtLogsList.size(), progressBar);
         initTask.execute();
     }
 
@@ -127,8 +127,8 @@ public class SearchActivity extends Activity {
             List<LogRow> data = new ArrayList<LogRow>();
 
             String keyword = kw.getText().toString();
-            for (int i = 0; i < MainActivity.logsList.size(); i++) {
-                LogRow row = MainActivity.logsList.get(i);
+            for (int i = 0; i < MainActivity.rtLogsList.size(); i++) {
+                LogRow row = MainActivity.rtLogsList.get(i);
 
                 String payload = row.getColumn(LogRow.ROW_PAYLOAD);
                 if(payload.indexOf(keyword, 0) != -1) {

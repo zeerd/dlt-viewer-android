@@ -16,8 +16,6 @@ import java.util.List;
 
 public class LogRow {
 
-    private String[] column = new String[7];
-
     public static final int ROW_INDEX = 0;
     public static final int ROW_TIMESTAMP = 1;
     public static final int ROW_ECUID = 2;
@@ -25,6 +23,9 @@ public class LogRow {
     public static final int ROW_CTID = 4;
     public static final int ROW_SUBTYPE = 5;
     public static final int ROW_PAYLOAD = 6;
+    public static final int ROW_COUNT = 7;
+
+    private String[] column = new String[ROW_COUNT];
 
     public LogRow(
                 String index,

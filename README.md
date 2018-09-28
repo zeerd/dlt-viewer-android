@@ -50,3 +50,6 @@ So I use some special way to build this project.
 [How to run the same asynctask more than once?](https://stackoverflow.com/questions/6879584/how-to-run-the-same-asynctask-more-than-once)
 
 [Show a context menu for long-clicks in an Android ListView](https://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/)
+
+[Using an ArrayAdapter with ListView](https://github.com/codepath/android_guides/wiki/Using-an-ArrayAdapter-with-ListView)
+

@@ -13,13 +13,16 @@ package com.zeerd.dltviewer;
 
 //import android.support.annotation.Keep;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.format.Formatter;
 import android.util.Log;
@@ -29,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -53,6 +57,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends Activity {
 
@@ -65,25 +71,20 @@ public class MainActivity extends Activity {
     private String dltFile;
     private ListView listviewLogTable;
     private LogTableAdapter adapterLogs;
+    private MyWorkerThread workerThread = null;
+    private TableInitTask initTask;
 
-    public static List<LogRow> logsList;
+    public static List<LogRow> rtLogsList;
     public static int search_index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                String string = bundle.getString("msg");
+        rtLogsList = new ArrayList<LogRow>();
 
-                parseMessages(string);
-
-            }
-        };
-        staticHandler = handler;
+        workerThread = new MyWorkerThread();
+        workerThread.start();
 
         setContentView(R.layout.activity_main);
         scrollView = (ScrollView)MainActivity.this.findViewById(R.id.log_scroll);
@@ -99,7 +100,7 @@ public class MainActivity extends Activity {
         setDltServerIp(ip.getText().toString());
 
         checkBox = (CheckBox)MainActivity.this.findViewById(R.id.checkbox_scroll);
-        checkBox.setChecked(true);
+        checkBox.setChecked(false);
 
         checkBoxConn = (CheckBox)MainActivity.this.findViewById(R.id.checkbox_conn);
         checkBoxConn.setChecked(false);
@@ -115,11 +116,30 @@ public class MainActivity extends Activity {
         setDltServerFilter(filter);
 
         listviewLogTable = (ListView)findViewById(R.id.log_table);
-        logsList = new ArrayList<LogRow>();
-        adapterLogs = new LogTableAdapter(this, logsList);
+        adapterLogs = new LogTableAdapter(this);
         listviewLogTable.setAdapter(adapterLogs);
 
+        listviewLogTable.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_MOVE) {
+                    checkBox.setChecked(false);
+                }
+                return false;
+            }
+        });
+
         search_index = -1;
+
+        Timer timer = new Timer();
+        TimerTask t = new TimerTask() {
+            @Override
+            public void run() {
+                initTask = new TableInitTask(adapterLogs);
+                initTask.execute();
+            }
+        };
+        timer.scheduleAtFixedRate(t,500,500);
     }
 
     @Override
@@ -180,61 +200,8 @@ public class MainActivity extends Activity {
             }
         };
 
-    public void parseMessages(String string) {
-        // Log.i(TAG, "" + string + ":" + type);
-        if(string.equals("header") && type == 2) {
-            type = 0;
-        }
-        else if(string.equals("payload") && type == 2) {
-            type = 1;
-        }
-        else if(string.equals("$disconnect$")) {
-            checkBoxConn.post(new Runnable() {
-                @Override
-                public void run() {
-                    checkBoxConn.setChecked(false);
-                    Toast.makeText(getBaseContext(),
-                        "Disconnected from daemon.",
-                                        Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-        else {
-            if(type == 0) {
-                sHeader = string;
-            }
-            else if(type == 1) {
-                String[] splited = sHeader.split("\\s+");
-
-                if(!splited[7].equals("control")) {
-
-                    logsList.add(new LogRow(
-                                        ""+(logsList.size()+1),
-                                        splited[2],
-                                        splited[4],
-                                        splited[5],
-                                        splited[6],
-                                        splited[8],
-                                        string));
-                    adapterLogs.notifyDataSetChanged();
-
-                    if(checkBox.isChecked()) {
-                        listviewLogTable.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                listviewLogTable.setSelection(adapterLogs.getCount() - 1);
-                            }
-                        });
-                    }
-                }
-            }
-            type = 2;
-        }
-    }
-
-
     public void clearLogTable(View v) {
-        logsList.clear();
+        rtLogsList.clear();
         adapterLogs.notifyDataSetChanged();
     }
 
@@ -340,8 +307,8 @@ public class MainActivity extends Activity {
             FileOutputStream fOut = new FileOutputStream(file);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
 
-            for (int i = 0; i < logsList.size(); i++) {
-                LogRow row = logsList.get(i);
+            for (int i = 0; i < rtLogsList.size(); i++) {
+                LogRow row = rtLogsList.get(i);
                 myOutWriter.append(row.getColumn(LogRow.ROW_TIMESTAMP) + " ");
                 myOutWriter.append(row.getColumn(LogRow.ROW_ECUID) + " ");
                 myOutWriter.append(row.getColumn(LogRow.ROW_APID) + " ");
@@ -373,6 +340,126 @@ public class MainActivity extends Activity {
 
         String[] ips = Formatter.formatIpAddress(ip).split("\\.");
         return ips [0] + "." + ips [1] + "." + ips [2] + ".1";
+    }
+
+    // This thread use to update the listview's adapter.
+    // We could not update it directly, the burst data will crash the main thread.
+    // This thread will be pulled up each 500ms by timer.
+    private class TableInitTask extends AsyncTask<Void,Integer, List<LogRow> > {
+
+        private static final String TAG = "DLT-Viewer";
+
+        private LogTableAdapter mTableAdapter;
+
+        public TableInitTask(LogTableAdapter tableAdapter) {
+            super();
+            mTableAdapter = tableAdapter;
+        }
+
+        @Override
+        protected List<LogRow> doInBackground(Void... params) {
+            // Log.i(TAG, "TableInitTask::doInBackground()");
+
+            List<LogRow> data;
+            if(rtLogsList == null) {
+                data = new ArrayList<LogRow>();
+            }
+            else {
+                data = new ArrayList<>(rtLogsList);
+            }
+
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(List<LogRow> result) {
+
+            // Log.i(TAG, "TableInitTask::onPostExecute()");
+
+            mTableAdapter.setData(result);
+            mTableAdapter.notifyDataSetChanged();
+            if(checkBox.isChecked()) {
+                listviewLogTable.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        listviewLogTable.setSelection(adapterLogs.getCount() - 1);
+                    }
+                });
+            }
+        }
+    }
+
+    public void parseMessages(String string) {
+        Log.i(TAG, "" + string + ":" + type);
+        if(string.equals("header") && type == 2) {
+            type = 0;
+        }
+        else if(string.equals("payload") && type == 2) {
+            type = 1;
+        }
+        else if(string.equals("$disconnect$")) {
+            checkBoxConn.post(new Runnable() {
+                @Override
+                public void run() {
+                    checkBoxConn.setChecked(false);
+                    Toast.makeText(getBaseContext(),
+                        "Disconnected from daemon.",
+                                        Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        else {
+            if(type == 0) {
+                sHeader = string;
+            }
+            else if(type == 1) {
+                String[] splited = sHeader.split("\\s+");
+
+                if(!splited[7].equals("control")) {
+
+                    rtLogsList.add(new LogRow(
+                                        ""+(rtLogsList.size()+1),
+                                        splited[2],
+                                        splited[4],
+                                        splited[5],
+                                        splited[6],
+                                        splited[8],
+                                        string));
+
+                }
+            }
+            type = 2;
+        }
+    }
+
+    // This child thread class has it's own Looper and Handler object.
+    // We use it to receive the logs from jni to reduce the workload of main thread.
+    private class MyWorkerThread extends Thread{
+        // This is worker thread handler.
+        public Handler workerThreadHandler;
+
+        @Override
+        public void run() {
+            // Prepare child thread Lopper object.
+            Looper.prepare();
+
+            // Create child thread Handler.
+            Handler handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    Bundle bundle = msg.getData();
+                    String string = bundle.getString("msg");
+
+                    parseMessages(string);
+
+                }
+            };
+            staticHandler = handler;
+
+            // Loop the child thread message queue.
+            Looper.loop();
+
+        }
     }
 
     static {

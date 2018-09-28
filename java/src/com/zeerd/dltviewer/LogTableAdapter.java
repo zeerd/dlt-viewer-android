@@ -26,6 +26,10 @@ public class LogTableAdapter extends BaseAdapter {
     private List<LogRow> rows;
     private static final String TAG = "DLT-Viewer";
 
+    private static class ViewHolder {
+        private TextView[] column = new TextView[LogRow.ROW_COUNT];
+    }
+
     public LogTableAdapter(Activity activity, List<LogRow> rows) {
         super();
         this.activity = activity;
@@ -69,17 +73,28 @@ public class LogTableAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        int i;
+        LogRow logRow = (LogRow)getItem(position);
+
+        ViewHolder viewHolder;
         if (convertView == null) {
+            viewHolder = new ViewHolder();
             LayoutInflater inflater = activity.getLayoutInflater();
             convertView = inflater.inflate(R.layout.log_row, null);
+
+            viewHolder.column[LogRow.ROW_INDEX] = (TextView) convertView.findViewById(R.id.log_index);
+            viewHolder.column[LogRow.ROW_TIMESTAMP] = (TextView) convertView.findViewById(R.id.log_timestamp);
+            viewHolder.column[LogRow.ROW_ECUID] = (TextView) convertView.findViewById(R.id.log_ecuid);
+            viewHolder.column[LogRow.ROW_APID] = (TextView) convertView.findViewById(R.id.log_apid);
+            viewHolder.column[LogRow.ROW_CTID] = (TextView) convertView.findViewById(R.id.log_ctid);
+            viewHolder.column[LogRow.ROW_SUBTYPE] = (TextView) convertView.findViewById(R.id.log_subtype);
+            viewHolder.column[LogRow.ROW_PAYLOAD] = (TextView) convertView.findViewById(R.id.log_payload);
+
+            convertView.setTag(viewHolder);
         }
-        TextView col0 = (TextView) convertView.findViewById(R.id.log_index);
-        TextView col1 = (TextView) convertView.findViewById(R.id.log_timestamp);
-        TextView col2 = (TextView) convertView.findViewById(R.id.log_ecuid);
-        TextView col3 = (TextView) convertView.findViewById(R.id.log_apid);
-        TextView col4 = (TextView) convertView.findViewById(R.id.log_ctid);
-        TextView col5 = (TextView) convertView.findViewById(R.id.log_subtype);
-        TextView col6 = (TextView) convertView.findViewById(R.id.log_payload);
+        else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
 
         String timestamp = rows.get(position).getColumn(LogRow.ROW_TIMESTAMP);
         String subtype = rows.get(position).getColumn(LogRow.ROW_SUBTYPE);
@@ -87,40 +102,29 @@ public class LogTableAdapter extends BaseAdapter {
         int len = timestamp.length();
         String new_timestamp = timestamp.substring(0, len-4) + "." + timestamp.substring(len-4, len);
         // Log.i(TAG, timestamp+" vs "+new_timestamp);
-        col0.setText(rows.get(position).getColumn(LogRow.ROW_INDEX));
-        col1.setText(new_timestamp);
-        col2.setText(rows.get(position).getColumn(LogRow.ROW_ECUID));
-        col3.setText(rows.get(position).getColumn(LogRow.ROW_APID));
-        col4.setText(rows.get(position).getColumn(LogRow.ROW_CTID));
-        col5.setText(subtype);
-        col6.setText(rows.get(position).getColumn(LogRow.ROW_PAYLOAD));
+
+        viewHolder.column[LogRow.ROW_INDEX].setText(rows.get(position).getColumn(LogRow.ROW_INDEX));
+        viewHolder.column[LogRow.ROW_TIMESTAMP].setText(new_timestamp);
+        viewHolder.column[LogRow.ROW_ECUID].setText(rows.get(position).getColumn(LogRow.ROW_ECUID));
+        viewHolder.column[LogRow.ROW_APID].setText(rows.get(position).getColumn(LogRow.ROW_APID));
+        viewHolder.column[LogRow.ROW_CTID].setText(rows.get(position).getColumn(LogRow.ROW_CTID));
+        viewHolder.column[LogRow.ROW_SUBTYPE].setText(subtype);
+        viewHolder.column[LogRow.ROW_PAYLOAD].setText(rows.get(position).getColumn(LogRow.ROW_PAYLOAD));
 
         if(subtype.equals("error") || subtype.equals("fatal")) {
-            col0.setBackgroundResource(R.drawable.border_red);
-            col1.setBackgroundResource(R.drawable.border_red);
-            col2.setBackgroundResource(R.drawable.border_red);
-            col3.setBackgroundResource(R.drawable.border_red);
-            col4.setBackgroundResource(R.drawable.border_red);
-            col5.setBackgroundResource(R.drawable.border_red);
-            col6.setBackgroundResource(R.drawable.border_red);
+            for(i=0;i<LogRow.ROW_COUNT;i++) {
+                viewHolder.column[i].setBackgroundResource(R.drawable.border_red);
+            }
         }
         else if(subtype.equals("warn")) {
-            col0.setBackgroundResource(R.drawable.border_yellow);
-            col1.setBackgroundResource(R.drawable.border_yellow);
-            col2.setBackgroundResource(R.drawable.border_yellow);
-            col3.setBackgroundResource(R.drawable.border_yellow);
-            col4.setBackgroundResource(R.drawable.border_yellow);
-            col5.setBackgroundResource(R.drawable.border_yellow);
-            col6.setBackgroundResource(R.drawable.border_yellow);
+            for(i=0;i<LogRow.ROW_COUNT;i++) {
+                viewHolder.column[i].setBackgroundResource(R.drawable.border_yellow);
+            }
         }
         else {
-            col0.setBackgroundResource(R.drawable.border);
-            col1.setBackgroundResource(R.drawable.border);
-            col2.setBackgroundResource(R.drawable.border);
-            col3.setBackgroundResource(R.drawable.border);
-            col4.setBackgroundResource(R.drawable.border);
-            col5.setBackgroundResource(R.drawable.border);
-            col6.setBackgroundResource(R.drawable.border);
+            for(i=0;i<LogRow.ROW_COUNT;i++) {
+                viewHolder.column[i].setBackgroundResource(R.drawable.border);
+            }
         }
 
         return convertView;
