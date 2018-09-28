@@ -339,11 +339,13 @@ DltReturnValue dlt_client_main_loop(DltClient *client, void *data, int verbose)
 
     if (client==0)
     {
+        LOGE("client invalid.");
         return DLT_RETURN_ERROR;
     }
 
     if (dlt_message_init(&msg,verbose) == DLT_RETURN_ERROR)
     {
+        LOGE("dlt message init failed.");
         return DLT_RETURN_ERROR;
     }
 
@@ -365,9 +367,11 @@ DltReturnValue dlt_client_main_loop(DltClient *client, void *data, int verbose)
             /* No more data to be received */
             if (dlt_message_free(&msg,verbose) == DLT_RETURN_ERROR)
             {
+                LOGE("dlt message free failed.");
                 return DLT_RETURN_ERROR;
             }
 
+            LOGI("No more data to be received.");
             return DLT_RETURN_TRUE;
         }
 
@@ -385,6 +389,7 @@ DltReturnValue dlt_client_main_loop(DltClient *client, void *data, int verbose)
                 {
                     /* Return value ignored */
                     dlt_message_free(&msg,verbose);
+                    LOGE("Return value ignored 1.");
                     return DLT_RETURN_ERROR;
                 }
             }
@@ -394,6 +399,7 @@ DltReturnValue dlt_client_main_loop(DltClient *client, void *data, int verbose)
                 {
                     /* Return value ignored */
                     dlt_message_free(&msg,verbose);
+                    LOGE("Return value ignored 2.");
                     return DLT_RETURN_ERROR;
                 }
             }
@@ -403,6 +409,7 @@ DltReturnValue dlt_client_main_loop(DltClient *client, void *data, int verbose)
         {
             /* Return value ignored */
             dlt_message_free(&msg,verbose);
+            LOGE("Return value ignored 3.");
             return DLT_RETURN_ERROR;
         }
     }
@@ -412,6 +419,7 @@ DltReturnValue dlt_client_main_loop(DltClient *client, void *data, int verbose)
         return DLT_RETURN_ERROR;
     }
 
+    LOGI("dlt_client_main_loop() OUT");
     return DLT_RETURN_OK;
 }
 
