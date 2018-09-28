@@ -16,4 +16,5 @@
    <string name="control">Control</string>
    <string name="default_level">Default Log Level</string>
    <string name="ok">OK</string>
+   <string name="search">Search</string>
 </resources>

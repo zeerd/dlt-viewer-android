@@ -16,4 +16,5 @@
    <string name="control">控制</string>
    <string name="default_level">默认Log级别</string>
    <string name="ok">确定</string>
+   <string name="search">搜索</string>
 </resources>

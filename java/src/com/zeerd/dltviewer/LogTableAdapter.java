@@ -32,9 +32,27 @@ public class LogTableAdapter extends BaseAdapter {
         this.rows = rows;
     }
 
+    public LogTableAdapter(Activity activity) {
+        super();
+        this.activity = activity;
+    }
+
+    public void setData(List<LogRow> rows) {
+        this.rows = rows;
+    }
+
+    public List<LogRow> getData() {
+        return this.rows;
+    }
+
     @Override
     public int getCount() {
-        return rows.size();
+        if(rows == null) {
+            return 0;
+        }
+        else {
+            return rows.size();
+        }
     }
 
     @Override
@@ -55,6 +73,7 @@ public class LogTableAdapter extends BaseAdapter {
             LayoutInflater inflater = activity.getLayoutInflater();
             convertView = inflater.inflate(R.layout.log_row, null);
         }
+        TextView col0 = (TextView) convertView.findViewById(R.id.log_index);
         TextView col1 = (TextView) convertView.findViewById(R.id.log_timestamp);
         TextView col2 = (TextView) convertView.findViewById(R.id.log_ecuid);
         TextView col3 = (TextView) convertView.findViewById(R.id.log_apid);
@@ -62,20 +81,22 @@ public class LogTableAdapter extends BaseAdapter {
         TextView col5 = (TextView) convertView.findViewById(R.id.log_subtype);
         TextView col6 = (TextView) convertView.findViewById(R.id.log_payload);
 
-        String timestamp = rows.get(position).getColumn(0);
-        String subtype = rows.get(position).getColumn(4);
+        String timestamp = rows.get(position).getColumn(LogRow.ROW_TIMESTAMP);
+        String subtype = rows.get(position).getColumn(LogRow.ROW_SUBTYPE);
 
         int len = timestamp.length();
         String new_timestamp = timestamp.substring(0, len-4) + "." + timestamp.substring(len-4, len);
-        Log.i(TAG, timestamp+" vs "+new_timestamp);
+        // Log.i(TAG, timestamp+" vs "+new_timestamp);
+        col0.setText(rows.get(position).getColumn(LogRow.ROW_INDEX));
         col1.setText(new_timestamp);
-        col2.setText(rows.get(position).getColumn(1));
-        col3.setText(rows.get(position).getColumn(2));
-        col4.setText(rows.get(position).getColumn(3));
+        col2.setText(rows.get(position).getColumn(LogRow.ROW_ECUID));
+        col3.setText(rows.get(position).getColumn(LogRow.ROW_APID));
+        col4.setText(rows.get(position).getColumn(LogRow.ROW_CTID));
         col5.setText(subtype);
-        col6.setText(rows.get(position).getColumn(5));
+        col6.setText(rows.get(position).getColumn(LogRow.ROW_PAYLOAD));
 
         if(subtype.equals("error") || subtype.equals("fatal")) {
+            col0.setBackgroundResource(R.drawable.border_red);
             col1.setBackgroundResource(R.drawable.border_red);
             col2.setBackgroundResource(R.drawable.border_red);
             col3.setBackgroundResource(R.drawable.border_red);
@@ -84,6 +105,7 @@ public class LogTableAdapter extends BaseAdapter {
             col6.setBackgroundResource(R.drawable.border_red);
         }
         else if(subtype.equals("warn")) {
+            col0.setBackgroundResource(R.drawable.border_yellow);
             col1.setBackgroundResource(R.drawable.border_yellow);
             col2.setBackgroundResource(R.drawable.border_yellow);
             col3.setBackgroundResource(R.drawable.border_yellow);
@@ -92,6 +114,7 @@ public class LogTableAdapter extends BaseAdapter {
             col6.setBackgroundResource(R.drawable.border_yellow);
         }
         else {
+            col0.setBackgroundResource(R.drawable.border);
             col1.setBackgroundResource(R.drawable.border);
             col2.setBackgroundResource(R.drawable.border);
             col3.setBackgroundResource(R.drawable.border);

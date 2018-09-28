@@ -59,9 +59,9 @@
                 android:layout_weight="1"
                 android:text="@string/ok"
                 android:onClick="setDefaultLogLevel"
-                                  android:padding="10dp"
-                  android:textSize="20dp"
-                  android:textStyle="normal" />
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="normal" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
@@ -142,9 +142,9 @@
                 android:layout_weight="1"
                 android:text="@string/ok"
                 android:onClick="setSpecialLogLevel"
-                                  android:padding="10dp"
-                  android:textSize="20dp"
-                  android:textStyle="normal" />
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="normal" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"

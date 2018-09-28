@@ -64,8 +64,10 @@ public class MainActivity extends Activity {
     private EditText ip;
     private String dltFile;
     private ListView listviewLogTable;
-    private List<LogRow> logsList;
     private LogTableAdapter adapterLogs;
+
+    public static List<LogRow> logsList;
+    public static int search_index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +118,17 @@ public class MainActivity extends Activity {
         logsList = new ArrayList<LogRow>();
         adapterLogs = new LogTableAdapter(this, logsList);
         listviewLogTable.setAdapter(adapterLogs);
+
+        search_index = -1;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(search_index > 0 && search_index < adapterLogs.getCount()) {
+            listviewLogTable.setSelection(search_index - 1);
+            checkBox.setChecked(false);
+        }
     }
 
     private CompoundButton.OnCheckedChangeListener connListener =
@@ -195,7 +208,14 @@ public class MainActivity extends Activity {
 
                 if(!splited[7].equals("control")) {
 
-                    logsList.add(new LogRow(splited[2], splited[4], splited[5], splited[6], splited[8], string));
+                    logsList.add(new LogRow(
+                                        ""+(logsList.size()+1),
+                                        splited[2],
+                                        splited[4],
+                                        splited[5],
+                                        splited[6],
+                                        splited[8],
+                                        string));
                     adapterLogs.notifyDataSetChanged();
 
                     if(checkBox.isChecked()) {
@@ -253,6 +273,11 @@ public class MainActivity extends Activity {
                     return true;
                     case R.id.control: {
                         Intent intent = new Intent(getBaseContext(), ControlActivity.class);
+                        startActivity(intent);
+                    }
+                    return true;
+                    case R.id.search: {
+                        Intent intent = new Intent(getBaseContext(), SearchActivity.class);
                         startActivity(intent);
                     }
                     return true;
@@ -317,12 +342,12 @@ public class MainActivity extends Activity {
 
             for (int i = 0; i < logsList.size(); i++) {
                 LogRow row = logsList.get(i);
-                myOutWriter.append(row.getColumn(0) + " ");
-                myOutWriter.append(row.getColumn(1) + " ");
-                myOutWriter.append(row.getColumn(2) + " ");
-                myOutWriter.append(row.getColumn(3) + " ");
-                myOutWriter.append(row.getColumn(4) + " ");
-                myOutWriter.append(row.getColumn(5) + "\n");
+                myOutWriter.append(row.getColumn(LogRow.ROW_TIMESTAMP) + " ");
+                myOutWriter.append(row.getColumn(LogRow.ROW_ECUID) + " ");
+                myOutWriter.append(row.getColumn(LogRow.ROW_APID) + " ");
+                myOutWriter.append(row.getColumn(LogRow.ROW_CTID) + " ");
+                myOutWriter.append(row.getColumn(LogRow.ROW_SUBTYPE) + " ");
+                myOutWriter.append(row.getColumn(LogRow.ROW_PAYLOAD) + "\n");
             }
 
             myOutWriter.close();
