@@ -65,6 +65,15 @@
 #include <winbase.h>
 #endif
 
+#include <android/log.h>
+static const char* kTAG = "dlt-jniCallback";
+#define LOGI(...) \
+  ((void)__android_log_print(ANDROID_LOG_INFO, kTAG, __VA_ARGS__))
+#define LOGW(...) \
+  ((void)__android_log_print(ANDROID_LOG_WARN, kTAG, __VA_ARGS__))
+#define LOGE(...) \
+  ((void)__android_log_print(ANDROID_LOG_ERROR, kTAG, __VA_ARGS__))
+
 static char str[DLT_COMMON_BUFFER_LENGTH];
 
 const char dltSerialHeader[DLT_ID_SIZE] = { 'D','L','S',1 };
@@ -2174,11 +2183,13 @@ int dlt_receiver_receive_socket(DltReceiver *receiver)
 {
     if (receiver == NULL)
     {
+        LOGE("dlt_receiver_receive_socket() : invalid parameter.");
         return -1;
     }
 
     if (receiver->buffer == NULL)
     {
+        LOGE("dlt_receiver_receive_socket() : invalid parameter 2.");
         return -1;
     }
 
