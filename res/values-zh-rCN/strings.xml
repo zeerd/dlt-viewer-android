@@ -8,6 +8,7 @@
    <string name="save">保存</string>
    <string name="remove">移除</string>
    <string name="add">添加</string>
+   <string name="del">删除</string>
    <string name="load">读取</string>
    <string name="exit">返回</string>
    <string name="clear">清除</string>
@@ -15,6 +16,14 @@
    <string name="log_to_file">存文件</string>
    <string name="control">控制</string>
    <string name="default_level">默认Log级别</string>
-   <string name="ok">确定</string>
    <string name="search">搜索</string>
+   <string name="goto_line">跳转到</string>
+   <string name="start_to_save_log">开始保存日志</string>
+   <string name="file_saved">文件已存储</string>
+   <string name="twice_to_exit">再按一次返回键退出</string>
+   <string name="disconn_daemon">连接从服务断开</string>
+   <string name="search_finish">搜索结束</string>
+   <string name="input_filename">输入文件名</string>
+   <string name="filter_save">过滤器已存储</string>
+   <string name="filter_load">过滤器已加载</string>
 </resources>

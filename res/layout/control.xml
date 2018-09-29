@@ -45,19 +45,17 @@
               <EditText
                 android:id="@+id/default_level"
                 android:inputType="number"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:padding="10dp"
                 android:textSize="20dp"
                 android:text="4"
                 />
               <Button
                 android:id="@+id/btn_default_level"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/ok"
+                android:text="@android:string/ok"
                 android:onClick="setDefaultLogLevel"
                 android:padding="10dp"
                 android:textSize="20dp"
@@ -75,7 +73,7 @@
             </TableRow>
             <TableRow>
               <TextView
-                  android:text="APID"
+                  android:text="APPID"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
@@ -140,8 +138,144 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/ok"
+                android:text="@android:string/ok"
                 android:onClick="setSpecialLogLevel"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="normal" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_weight="1"
+                    android:background="#FF909090"
+                    android:padding="2dip" />
+            </TableRow>
+            <TableRow>
+              <TextView
+                  android:text="APPID"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:padding="10dp"
+                  android:textSize="20dp"
+                  android:textStyle="normal"/>
+              <TextView
+                  android:text="CTID"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:padding="10dp"
+                  android:textSize="20dp"
+                  android:textStyle="normal"/>
+              <TextView
+                  android:text="SRVID"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:padding="10dp"
+                  android:textSize="20dp"
+                  android:textStyle="normal"/>
+              <TextView
+                  android:text="MSG"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:padding="10dp"
+                  android:textSize="20dp"
+                  android:textStyle="normal"/>
+            </TableRow>
+            <TableRow>
+              <EditText
+                  android:id="@+id/inject_apid"
+                  android:text=""
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:padding="10dp"
+                  android:textSize="20dp"
+                  android:textStyle="normal"/>
+              <EditText
+                  android:id="@+id/inject_ctid"
+                  android:text=""
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:padding="10dp"
+                  android:textSize="20dp"
+                  android:textStyle="normal"/>
+              <EditText
+                  android:id="@+id/inject_sid"
+                  android:text=""
+                  android:inputType="number"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:padding="10dp"
+                  android:textSize="20dp"
+                  android:textStyle="normal"/>
+              <EditText
+                  android:id="@+id/inject_msg"
+                  android:text=""
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:padding="10dp"
+                  android:textSize="20dp"
+                  android:textStyle="normal"/>
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+              <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inject Message"
+                android:onClick="sendInjectMessage"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="normal" />
+              <CheckBox
+                android:id="@+id/checkbox_hex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HEX"/>
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_weight="1"
+                    android:background="#FF909090"
+                    android:padding="2dip" />
+            </TableRow>
+            <TableRow>
+              <TextView
+                android:text="@string/goto_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:textStyle="normal"/>
+              <EditText
+                android:id="@+id/goto_line"
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:text="1"
+                />
+              <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/goto_line"
+                android:onClick="gotoLogsLine"
                 android:padding="10dp"
                 android:textSize="20dp"
                 android:textStyle="normal" />

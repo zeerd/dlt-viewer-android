@@ -1,6 +1,8 @@
 /*
  * @licence app begin@
  *
+ * Copyright (C) 2018, Charles Chan <emneg@zeerd.com>
+ *
  * This Source Code Form is subject to the terms of the
  * Mozilla Public License (MPL), v. 2.0.
  * If a copy of the MPL was not distributed with this file,
@@ -12,11 +14,16 @@
 package com.zeerd.dltviewer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
@@ -33,6 +40,8 @@ public class SettingActivity extends Activity {
 
     private TableLayout table;
     private String filterPath;
+    private String filterName = "my";
+
     private static final String TAG = "DLT-Viewer";
 
     @Override
@@ -44,25 +53,56 @@ public class SettingActivity extends Activity {
 
         filterPath = getExternalCacheDir() + "";
 
-        loadFilter(null);
+        loadFilterFile(null);
     }
 
     public void clearFilter(View v) {
-        for(int i = 1, j = table.getChildCount(); i < j; i++) {
-            View view = table.getChildAt(i);
-            if (view instanceof TableRow) {
-                // then, you can remove the the row you want...
-                // for instance...
-                TableRow row = (TableRow) view;
-                table.removeView(row);
-            }
-        }
+        // for(int i = 0, j = table.getChildCount(); i < j; i++) {
+        //     View view = table.getChildAt(i);
+        //     if (view instanceof TableRow) {
+        //         // then, you can remove the the row you want...
+        //         // for instance...
+        //         TableRow row = (TableRow) view;
+        //         table.removeView(row);
+        //     }
+        // }
+        table.removeAllViews();
     }
 
-    public void saveFilter(View v) {
-        Log.i(TAG, "save filter into " + filterPath + "/my.filter");
+    public void deleteFilter(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(
+            getResources().getString(R.string.del) + " " + filterName + " ?");
 
-        final File file = new File(filterPath, "my.filter");
+        // Set up the buttons
+        builder.setPositiveButton(
+                    getResources().getString(android.R.string.ok),
+                    new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final File file = new File(filterPath, filterName + ".filter");
+                file.delete();
+            }
+        });
+        builder.setNegativeButton(
+                    getResources().getString(android.R.string.cancel),
+                    new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+
+    }
+
+    public void saveFilterFile() {
+
+        Log.i(TAG,
+            "save filter into " + filterPath + "/" + filterName + ".filter");
+
+        final File file = new File(filterPath, filterName + ".filter");
 
         // Save your stream, don't forget to flush() it before closing it.
 
@@ -78,14 +118,16 @@ public class SettingActivity extends Activity {
                     // then, you can remove the the row you want...
                     // for instance...
                     TableRow row = (TableRow) view;
-                    String r = ((EditText)row.findViewById(R.id.filter_apid)).getText().toString();
+                    EditText apid = (EditText)row.findViewById(R.id.filter_apid);
+                    String r = apid.getText().toString();
                     if(r.equals("")) {
                         myOutWriter.append("----\n");
                     }
                     else {
                         myOutWriter.append(r + "\n");
                     }
-                    r = ((EditText)row.findViewById(R.id.filter_ctid)).getText().toString();
+                    EditText ctid = (EditText)row.findViewById(R.id.filter_ctid);
+                    r = ctid.getText().toString();
                     if(r.equals("")) {
                         myOutWriter.append("----\n");
                     }
@@ -102,10 +144,11 @@ public class SettingActivity extends Activity {
             fOut.close();
 
             Toast.makeText(getBaseContext(),
-                            "Filter saved : " + filterPath + "/my.filter",
-                                                Toast.LENGTH_LONG).show();
+                            getResources().getString(R.string.filter_save)
+                            + " : " + filterPath + "/" + filterName + ".filter",
+                            Toast.LENGTH_SHORT).show();
 
-            setDltServerFilter(filterPath + "/my.filter");
+            setDltServerFilter(filterPath + "/" + filterName + ".filter");
         }
         catch (IOException e)
         {
@@ -114,10 +157,47 @@ public class SettingActivity extends Activity {
 
     }
 
+    public void saveFilter(View v) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.input_filename));
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setText(filterName);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton(
+                    getResources().getString(android.R.string.ok),
+                    new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                filterName = input.getText().toString();
+                saveFilterFile();
+            }
+        });
+        builder.setNegativeButton(
+                    getResources().getString(android.R.string.cancel),
+                    new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+
     public void addFilter(View v) {
 
         // Inflate your row "template" and fill out the fields.
-        TableRow row = (TableRow)LayoutInflater.from(SettingActivity.this).inflate(R.layout.filter_row, null);
+        TableRow row = (TableRow)LayoutInflater
+                            .from(SettingActivity.this)
+                            .inflate(R.layout.filter_row, null);
         ((EditText)row.findViewById(R.id.filter_apid)).setText("----");
         ((EditText)row.findViewById(R.id.filter_ctid)).setText("----");
 
@@ -131,12 +211,12 @@ public class SettingActivity extends Activity {
         table.removeView(tr);
     }
 
-    public void loadFilter(View v) {
+    public void loadFilterFile(View v) {
         Log.i(TAG, "load filter from " + filterPath);
 
         clearFilter(v);
         //Get the text file
-        File file = new File(filterPath, "my.filter");
+        File file = new File(filterPath, filterName + ".filter");
 
         //Read text from file
         StringBuilder text = new StringBuilder();
@@ -148,7 +228,9 @@ public class SettingActivity extends Activity {
             while ((apid = br.readLine()) != null) {
                 ctid = br.readLine();
                 if(ctid != null) {
-                    TableRow row = (TableRow)LayoutInflater.from(SettingActivity.this).inflate(R.layout.filter_row, null);
+                    TableRow row = (TableRow)LayoutInflater
+                                        .from(SettingActivity.this)
+                                        .inflate(R.layout.filter_row, null);
                     ((EditText)row.findViewById(R.id.filter_apid)).setText(apid);
                     ((EditText)row.findViewById(R.id.filter_ctid)).setText(ctid);
                     table.addView(row);
@@ -158,11 +240,36 @@ public class SettingActivity extends Activity {
             br.close();
 
             Toast.makeText(getBaseContext(),
-                            "Filter loaded : " + filterPath + "/" + "my.filter",
-                                                Toast.LENGTH_LONG).show();
+                            getResources().getString(R.string.filter_load)
+                            + " : " + filterPath + "/" + filterName + ".filter",
+                            Toast.LENGTH_SHORT).show();
         }
         catch (IOException e) {
             //You'll need to add proper error handling here
+        }
+    }
+
+    public void loadFilter(View v) {
+
+        File directory = new File(filterPath);
+        File[] files = directory.listFiles();
+        if(files.length > 0) {
+            PopupMenu popup = new PopupMenu(this, v);
+            for (int i = 0; i < files.length; i++) {
+                String name = files[i].getName();
+                if(name.substring(name.lastIndexOf('.')).equals(".filter")) {
+                    popup.getMenu().add(name.substring(0, name.lastIndexOf('.')));
+                }
+            }
+            popup.setOnMenuItemClickListener(
+                            new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    filterName = item.getTitle().toString();
+                    loadFilterFile(null);
+                    return true;
+                }
+            });
+            popup.show();
         }
     }
 

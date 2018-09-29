@@ -1,6 +1,8 @@
 /*
  * @licence app begin@
  *
+ * Copyright (C) 2018, Charles Chan <emneg@zeerd.com>
+ *
  * This Source Code Form is subject to the terms of the
  * Mozilla Public License (MPL), v. 2.0.
  * If a copy of the MPL was not distributed with this file,
@@ -51,7 +53,7 @@ typedef struct log_context {
     jclass   mainActivityClz;
     jobject  mainActivityObj;
     pthread_mutex_t  lock;
-    int      done;
+    int      running;
     jmethodID statusId;
     JNIEnv *env;
 } LogContext;
@@ -150,7 +152,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
     g_ctx.jniHelperObj = (*env)->NewGlobalRef(env, handler);
     queryRuntimeInfo(env, g_ctx.jniHelperObj);
 
-    g_ctx.done = 0;
+    g_ctx.running = 0;
     g_ctx.mainActivityObj = NULL;
 
     ip = default_ip;
@@ -163,6 +165,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
     sigaction(SIGUSR1,&actions,NULL);
 
     pthread_mutex_init(&g_ctx.lock, NULL);
+
+    LOGI("JNI_OnLoad() Done.");
 
     return  JNI_VERSION_1_6;
 }
@@ -266,7 +270,11 @@ void*  UpdateLogs(void* context) {
                 "LogerThread status: start updating ...");
 
     /* Connect to TCP socket or open serial device */
-    if (dlt_client_connect(&dltclient, 0) != DLT_RETURN_ERROR)
+     /* Workaround for issue: socket disconnect after about 20000 logs.
+       No more data to be received. But don't know why. */
+    while (pctx->running
+        && dlt_client_connect(&dltclient, 0) != DLT_RETURN_ERROR
+        )
     {
         /* Dlt Client Main Loop */
         dlt_client_main_loop(&dltclient, pctx, 0);
@@ -274,7 +282,8 @@ void*  UpdateLogs(void* context) {
         /* Dlt Client Cleanup */
         dlt_client_cleanup(&dltclient, 0);
     }
-    else {
+
+    if(pctx->running) {
         LOGE("dlt connect failed from jni\n");
         sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "$disconnect$");
     }
@@ -307,6 +316,11 @@ Java_com_zeerd_dltviewer_MainActivity_startLogs(JNIEnv *env, jobject instance) {
     pthread_attr_destroy(&threadAttr_);
 
     (void)result;
+
+    pthread_mutex_lock(&g_ctx.lock);
+    g_ctx.running = 1;
+    pthread_mutex_unlock(&g_ctx.lock);
+
     LOGI("run start Logs from jni : %d\n", result);
 }
 
@@ -317,6 +331,9 @@ Java_com_zeerd_dltviewer_MainActivity_startLogs(JNIEnv *env, jobject instance) {
  */
 JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_MainActivity_stopLogs(JNIEnv *env, jobject instance) {
+
+    LOGI("run stop Logs from jni : IN\n");
+
     pthread_mutex_lock(&g_ctx.lock);
     dlt_client_cleanup(&dltclient, 0);
 
@@ -326,10 +343,12 @@ Java_com_zeerd_dltviewer_MainActivity_stopLogs(JNIEnv *env, jobject instance) {
     g_ctx.mainActivityObj = NULL;
     g_ctx.mainActivityClz = NULL;
 
+    g_ctx.running = 0;
+
     pthread_mutex_unlock(&g_ctx.lock);
 //    pthread_mutex_destroy(&g_ctx.lock);
 
-    LOGI("run stop Logs from jni\n");
+    LOGI("run stop Logs from jni : OUT\n");
 }
 
 JNIEXPORT void JNICALL
@@ -415,4 +434,79 @@ Java_com_zeerd_dltviewer_ControlActivity_setLevel(JNIEnv *env, jobject instance,
     char *c = (*env)->GetStringUTFChars(env, ctid, NULL);
     dlt_client_send_log_level(&dltclient, a, c, (int)level);
     LOGI("set [%s:%s] log level to %d.\n", a, c, (int)level);
+}
+
+static void hexAsciiToBinary (const char *ptr,uint8_t *binary,int *size)
+{
+
+    char ch = *ptr;
+    int pos = 0;
+    binary[pos] = 0;
+    int first = 1;
+    int found;
+
+    for(;;)
+    {
+
+        if(ch == 0)
+        {
+            *size = pos;
+            return;
+        }
+
+
+        found = 0;
+        if (ch >= '0' && ch <= '9')
+        {
+            binary[pos] = (binary[pos] << 4) + (ch - '0');
+            found = 1;
+        }
+        else if (ch >= 'A' && ch <= 'F')
+        {
+            binary[pos] = (binary[pos] << 4) + (ch - 'A' + 10);
+            found = 1;
+        }
+        else if (ch >= 'a' && ch <= 'f')
+        {
+            binary[pos] = (binary[pos] << 4) + (ch - 'a' + 10);
+            found = 1;
+        }
+        if(found)
+        {
+            if(first)
+                first = 0;
+            else
+            {
+                first = 1;
+                pos++;
+                if(pos>=*size)
+                    return;
+                binary[pos]=0;
+            }
+        }
+
+        ch = *(++ptr);
+    }
+
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_ControlActivity_sendInject(JNIEnv *env, jobject instance, jstring apid, jstring ctid, jint sid, jstring msg, jint hex) {
+
+    char *a = (*env)->GetStringUTFChars(env, apid, NULL);
+    char *c = (*env)->GetStringUTFChars(env, ctid, NULL);
+    int s = (int)sid;
+    char *m = (*env)->GetStringUTFChars(env, msg, NULL);
+
+    if(hex) {
+        uint8_t buffer[1024];
+        int size = 1024;
+        hexAsciiToBinary(m, buffer, &size);
+        dlt_client_send_inject_msg(&dltclient, a, c, s, buffer,size);
+    }
+    else {
+        dlt_client_send_inject_msg(&dltclient, a, c, s, (uint8_t*)m, strlen(m));
+    }
+
+    LOGI("send inject message to [%s:%s:%d] : %s.\n", a, c, s, m);
 }

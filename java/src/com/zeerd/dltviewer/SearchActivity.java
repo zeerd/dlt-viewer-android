@@ -1,6 +1,8 @@
 /*
  * @licence app begin@
  *
+ * Copyright (C) 2018, Charles Chan <emneg@zeerd.com>
+ *
  * This Source Code Form is subject to the terms of the
  * Mozilla Public License (MPL), v. 2.0.
  * If a copy of the MPL was not distributed with this file,
@@ -126,11 +128,11 @@ public class SearchActivity extends Activity {
             EditText kw = (EditText)findViewById(R.id.keyword);
             List<LogRow> data = new ArrayList<LogRow>();
 
-            String keyword = kw.getText().toString();
+            String keyword = kw.getText().toString().toLowerCase();
             for (int i = 0; i < MainActivity.rtLogsList.size(); i++) {
                 LogRow row = MainActivity.rtLogsList.get(i);
 
-                String payload = row.getColumn(LogRow.ROW_PAYLOAD);
+                String payload = row.getColumn(LogRow.ROW_PAYLOAD).toLowerCase();
                 if(payload.indexOf(keyword, 0) != -1) {
                     data.add(new LogRow(
                                     row.getColumn(LogRow.ROW_INDEX),
@@ -163,8 +165,8 @@ public class SearchActivity extends Activity {
             mTableAdapter.notifyDataSetChanged();
 
             Toast.makeText(getBaseContext(),
-                "Finished",
-                Toast.LENGTH_LONG).show();
+                getResources().getString(R.string.search_finish),
+                Toast.LENGTH_SHORT).show();
 
         }
     }

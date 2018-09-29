@@ -1,6 +1,8 @@
 /*
  * @licence app begin@
  *
+ * Copyright (C) 2018, Charles Chan <emneg@zeerd.com>
+ *
  * This Source Code Form is subject to the terms of the
  * Mozilla Public License (MPL), v. 2.0.
  * If a copy of the MPL was not distributed with this file,
@@ -145,9 +147,17 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
+
         if(search_index > 0 && search_index < adapterLogs.getCount()) {
-            listviewLogTable.setSelection(search_index - 1);
+            Log.v(TAG, "onResume() : " + search_index);
             checkBox.setChecked(false);
+            listviewLogTable.clearFocus();
+            listviewLogTable.post(new Runnable() {
+                @Override
+                public void run() {
+                    listviewLogTable.setSelection(search_index - 1);
+                }
+            });
         }
     }
 
@@ -188,14 +198,17 @@ public class MainActivity extends Activity {
                                    + ".dlt";
                     startRecordLogs(dltFile);
                     Toast.makeText(getBaseContext(),
-                            "Start to save logs : " + dltFile,
-                                                Toast.LENGTH_LONG).show();
+                            getResources().getString(R.string.start_to_save_log)
+                            + " : "
+                            + dltFile,
+                            Toast.LENGTH_SHORT).show();
                 }
                 else {
                     stopRecordLogs();
                     Toast.makeText(getBaseContext(),
-                            "File saved : " + dltFile,
-                                                Toast.LENGTH_LONG).show();
+                            getResources().getString(R.string.file_saved)
+                            + " : " + dltFile,
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -215,7 +228,9 @@ public class MainActivity extends Activity {
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,
+                getResources().getString(R.string.twice_to_exit),
+                Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
 
@@ -323,8 +338,9 @@ public class MainActivity extends Activity {
             fOut.close();
 
             Toast.makeText(getBaseContext(),
-                            "File saved : " + path + "/" +filename,
-                                                Toast.LENGTH_LONG).show();
+                            getResources().getString(R.string.file_saved)
+                            + " : " + path + "/" +filename,
+                            Toast.LENGTH_SHORT).show();
         }
         catch (IOException e)
         {
@@ -338,8 +354,7 @@ public class MainActivity extends Activity {
         WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
         int ip = wifiInfo.getIpAddress();
 
-        String[] ips = Formatter.formatIpAddress(ip).split("\\.");
-        return ips [0] + "." + ips [1] + "." + ips [2] + ".1";
+        return String.format("%d.%d.%d.1", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff));
     }
 
     // This thread use to update the listview's adapter.
@@ -390,7 +405,7 @@ public class MainActivity extends Activity {
     }
 
     public void parseMessages(String string) {
-        Log.i(TAG, "" + string + ":" + type);
+        // Log.i(TAG, "" + string + ":" + type);
         if(string.equals("header") && type == 2) {
             type = 0;
         }
@@ -403,8 +418,8 @@ public class MainActivity extends Activity {
                 public void run() {
                     checkBoxConn.setChecked(false);
                     Toast.makeText(getBaseContext(),
-                        "Disconnected from daemon.",
-                                        Toast.LENGTH_LONG).show();
+                        getResources().getString(R.string.disconn_daemon),
+                                        Toast.LENGTH_SHORT).show();
                 }
             });
         }

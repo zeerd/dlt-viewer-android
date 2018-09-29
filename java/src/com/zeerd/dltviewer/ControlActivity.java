@@ -1,6 +1,8 @@
 /*
  * @licence app begin@
  *
+ * Copyright (C) 2018, Charles Chan <emneg@zeerd.com>
+ *
  * This Source Code Form is subject to the terms of the
  * Mozilla Public License (MPL), v. 2.0.
  * If a copy of the MPL was not distributed with this file,
@@ -15,6 +17,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +53,7 @@ public class ControlActivity extends Activity {
             + ctid.getText().toString()
             + "] to be "
             + lvl.getText().toString(),
-            Toast.LENGTH_LONG).show();
+            Toast.LENGTH_SHORT).show();
     }
 
     public void setDefaultLogLevel(View v) {
@@ -61,7 +64,47 @@ public class ControlActivity extends Activity {
         Toast.makeText(getBaseContext(),
             "Set the default level to be "
             + lvl.getText().toString(),
-            Toast.LENGTH_LONG).show();
+            Toast.LENGTH_SHORT).show();
+    }
+
+    public void sendInjectMessage(View v) {
+        EditText apid = (EditText)ControlActivity.this.findViewById(R.id.inject_apid);
+        EditText ctid = (EditText)ControlActivity.this.findViewById(R.id.inject_ctid);
+        EditText sid = (EditText)ControlActivity.this.findViewById(R.id.inject_sid);
+        EditText msg = (EditText)ControlActivity.this.findViewById(R.id.inject_msg);
+        CheckBox hex = (CheckBox)ControlActivity.this.findViewById(R.id.checkbox_hex);
+
+        sendInject(
+            apid.getText().toString(),
+            ctid.getText().toString(),
+            Integer.parseInt(sid.getText().toString()),
+            msg.getText().toString(),
+            hex.isChecked()?1:0
+            );
+
+        Toast.makeText(getBaseContext(),
+            "Send inject message to ["
+            + apid.getText().toString()
+            + ":"
+            + ctid.getText().toString()
+            + ":"
+            + sid.getText().toString()
+            + "] : "
+            + msg.getText().toString(),
+            Toast.LENGTH_SHORT).show();
+    }
+
+    public void gotoLogsLine(View v) {
+        EditText line = (EditText)ControlActivity.this.findViewById(R.id.goto_line);
+
+        MainActivity.search_index = Integer.parseInt(line.getText().toString());
+
+        Toast.makeText(getBaseContext(),
+                getResources().getString(R.string.goto_line)
+                + " : " + MainActivity.search_index,
+            Toast.LENGTH_SHORT).show();
+
+        returnControl(v);
     }
 
     public void returnControl(View v) {
@@ -74,5 +117,6 @@ public class ControlActivity extends Activity {
     public native void setDefaultLevel(int level);
     public native void setAllLevel(int level);
     public native void setLevel(String apid, String ctid, int level);
+    public native void sendInject(String apid, String ctid, int sid, String msg, int hex);
 
 }
