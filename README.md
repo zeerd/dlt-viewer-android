@@ -2,7 +2,7 @@
 
 ## Build (Android Studio)
 
-Nothing to say about this. Just follow the hits of android studio itself.
+Nothing to say about this. Just follow the hints of android studio itself.
 
 ## Build (Linux Terminal)
 
@@ -31,8 +31,8 @@ There are English and Chinese support for this application.
 
 | Screen shot                 | Description                              |
 | --------------------------- | ---------------------------------------- |
-| ![home](doc/home.png)       | The save button at the top of the application used to save the logs shown on the screen. <br/> The save check-box at the bottom of the application used to save the dlt-format log into the download folder. The filter will not work for this function. Means all dlt logs received will be stored. |
-| ![menu](doc/menu.png)       | Touch Setting Button to open the menu.   |
-| ![filter](doc/filter.png)   | User can add a group of filters. Users can save them in different files and reloaded them anytime. |
-| ![control](doc/control.png) | Users could set log level with this function. <br/> Users could send inject message.  <br/> Users could use this function to jump to a given line on the home screen. |
-| ![search](doc/search.png)   | Users could use a keyword to search in the payload on the home screen. This keyword is not case sensitive.  <br/> Long press a search result will jump to the position of the main screen. |
+| ![home](doc/home.png =100x)       | The save button at the top of the application used to save the logs shown on the screen. <br/> The save check-box at the bottom of the application used to save the dlt-format log into the download folder. The filter will not work for this function. Means all dlt logs received will be stored. |
+| ![menu](doc/menu.png =100x)       | Touch Menu Button to open the menu.   |
+| ![filter](doc/filter.png =100x)   | User can add a group of filters. Users can save them in different files and reloaded them anytime. |
+| ![control](doc/control.png =100x) | Users could set log level with this function. <br/> Users could send inject message.  <br/> Users could use this function to jump to a given line on the home screen. |
+| ![search](doc/search.png =100x)   | Users could use a keyword to search in the payload on the home screen. This keyword is not case sensitive.  <br/> Long press a search result will jump to the position of the main screen. |
