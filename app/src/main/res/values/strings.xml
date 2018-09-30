@@ -1,6 +1,4 @@
 <resources>
-   <string name="menu_settings">Settings</string>
-   <string name="title_activity_main">MainActivity</string>
    <string name="scroll">Auto Scroll</string>
    <string name="setting">Setting</string>
    <string name="filter">Filter</string>
@@ -26,4 +24,16 @@
    <string name="input_filename">Input a filename</string>
    <string name="filter_save">Filter Saved</string>
    <string name="filter_load">Filter Loaded</string>
+   <string name="menu">Menu</string>
+   <string name="home">Home</string>
+   <string name="help_view">The Diagnostic Log and Trace Viewer for Android is an application that can receive messages from the DLT daemon with filter.</string>
+   <string name="help_daemon">DLT, short for Diagnostic Log and Trace, provides a log and trace interface, based on the standardised protocol specified in the AUTOSAR standard 4.0 DLT. There is a famous implemention of DLT by GENIVI Alliance. This viewer is based on it.</string>
+   <string name="help_home1">The save button at the top of the application used to save the logs shown on the screen.</string>
+   <string name="help_home2">The save check-box at the bottom of the application used to save the dlt-format log into the download folder. The filter will not work for this function. Means all dlt logs received will be stored.</string>
+   <string name="help_menu">Touch Setting Button to open the menu.</string>
+   <string name="help_filter">User can add a group of filters. Users can save them in different files and reloaded them anytime.</string>
+   <string name="help_control1">Users could set log level with this function.</string>
+   <string name="help_control2">Users could send inject message.</string>
+   <string name="help_control3">Users could use this function to jump to a given line on the home screen.</string>
+   <string name="help_search">Users could use a keyword to search in the payload on the home screen. This keyword is not case sensitive.</string>
 </resources>

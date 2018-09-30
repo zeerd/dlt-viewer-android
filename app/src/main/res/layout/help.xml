@@ -19,7 +19,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="dlt-viewer-android"
+            android:padding="10dp"
+            android:textSize="20dp"
+            android:text="DLT-Viewer for Android"
             android:textStyle="normal"
             />
         </TableRow>
@@ -38,7 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="The Diagnostic Log and Trace Viewer for Android is an application that can receive messages from the DLT daemon with filter."
+            android:text="@string/help_view"
             android:textStyle="normal"
             />
         </TableRow>
@@ -47,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="DLT, short for Diagnostic Log and Trace, provides a log and trace interface, based on the standardised protocol specified in the AUTOSAR standard 4.0 DLT."
+            android:text="@string/help_daemon"
             android:textStyle="normal"
             />
         </TableRow>
@@ -66,7 +68,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="https://github.com/GENIVI/dlt-daemon"
+            android:padding="10dp"
+            android:textSize="20dp"
+            android:text="@string/home"
             android:textStyle="normal"
             />
         </TableRow>
@@ -75,9 +79,126 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="https://github.com/GENIVI/dlt-viewer"
+            android:text="@string/help_home1"
             android:textStyle="normal"
             />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/help_home2"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:textSize="20dp"
+            android:text="@string/menu"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/help_menu"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:textSize="20dp"
+            android:text="@string/filter"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/help_filter"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:textSize="20dp"
+            android:text="@string/control"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/help_control1"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/help_control2"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/help_control3"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:textSize="20dp"
+            android:text="@string/search"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/help_search"
+            android:textStyle="normal"
+            />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_weight="1"
+                android:background="#FF909090"
+                android:padding="2dip" />
         </TableRow>
         <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
           <TextView

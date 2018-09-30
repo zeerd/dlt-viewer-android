@@ -14,32 +14,33 @@ rm -rf src/com/zeerd/dltviewer/R.java
 
 echo "Generating R.java file..."
 install -d src/com/zeerd/dltviewer/
-$AAPT package -f -m -J src -M AndroidManifest.xml -S res -I $PLATFORM
-mv src/com/zeerd/dltviewer/R.java java/src/com/zeerd/dltviewer/R.java
+$AAPT package -f -m -J src -M app/src/main/AndroidManifest.xml -S app/src/main/res/ -I $PLATFORM
+mv src/com/zeerd/dltviewer/R.java app/src/main/java/com/zeerd/dltviewer/R.java
 
 echo "Compiling..."
 install -d obj
-javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/SearchActivity.java
-javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/SettingActivity.java
-javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/HelpActivity.java
-javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/ControlActivity.java
-javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/LogRow.java
-javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/LogTableAdapter.java
-javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 -Xlint:deprecation java/src/com/zeerd/dltviewer/MainActivity.java
-javac -d obj -classpath java/src -bootclasspath $PLATFORM -source 1.7 -target 1.7 java/src/com/zeerd/dltviewer/R.java
+JAVAC="javac -d obj -classpath app/src/main/java -bootclasspath $PLATFORM -source 1.7 -target 1.7 -Xlint:deprecation"
+$JAVAC app/src/main/java/com/zeerd/dltviewer/SearchActivity.java
+$JAVAC app/src/main/java/com/zeerd/dltviewer/SettingActivity.java
+$JAVAC app/src/main/java/com/zeerd/dltviewer/HelpActivity.java
+$JAVAC app/src/main/java/com/zeerd/dltviewer/ControlActivity.java
+$JAVAC app/src/main/java/com/zeerd/dltviewer/LogRow.java
+$JAVAC app/src/main/java/com/zeerd/dltviewer/LogTableAdapter.java
+$JAVAC app/src/main/java/com/zeerd/dltviewer/MainActivity.java
+$JAVAC app/src/main/java/com/zeerd/dltviewer/R.java
 
 echo "Translating in Dalvik bytecode..."
 $DX --dex --output=classes.dex obj
 
 echo "Compiling Dlt ..."
-export NDK_PROJECT_PATH=.
+export NDK_PROJECT_PATH=app/src/main/
 rm -rf lib
 /opt/android-ndk-r16b/ndk-build
-mv libs lib
+mv app/src/main/libs lib
 
 echo "Making APK..."
 install -d bin
-$AAPT package -f -m -F bin/dlt-viewer.unaligned.apk -M AndroidManifest.xml -S res -I $PLATFORM
+$AAPT package -f -m -F bin/dlt-viewer.unaligned.apk -M app/src/main/AndroidManifest.xml -S app/src/main/res/ -I $PLATFORM
 $AAPT add bin/dlt-viewer.unaligned.apk classes.dex
 $AAPT add bin/dlt-viewer.unaligned.apk lib/arm64-v8a/libdlt-jnicallback.so
 $AAPT add bin/dlt-viewer.unaligned.apk lib/armeabi-v7a/libdlt-jnicallback.so

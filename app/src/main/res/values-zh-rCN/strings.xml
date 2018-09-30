@@ -1,6 +1,4 @@
 <resources>
-   <string name="menu_settings">设置</string>
-   <string name="title_activity_main">主界面</string>
    <string name="scroll">自动滚动</string>
    <string name="setting">设置</string>
    <string name="filter">过滤</string>
@@ -15,7 +13,7 @@
    <string name="conn">连接</string>
    <string name="log_to_file">存文件</string>
    <string name="control">控制</string>
-   <string name="default_level">默认Log级别</string>
+   <string name="default_level">默认日志级别</string>
    <string name="search">搜索</string>
    <string name="goto_line">跳转到</string>
    <string name="start_to_save_log">开始保存日志</string>
@@ -26,4 +24,16 @@
    <string name="input_filename">输入文件名</string>
    <string name="filter_save">过滤器已存储</string>
    <string name="filter_load">过滤器已加载</string>
+   <string name="menu">菜单</string>
+   <string name="home">主界面</string>
+   <string name="help_view">本软件可用于接收DLT Daemon的日志信息。</string>
+   <string name="help_daemon">DLT是诊断日志和跟踪的简称，它基于AUTOSAR标准4.0中的标准化协议，提供日志和跟踪接口。 GENIVI联盟提供了一个著名的DLT解决方案。 本查看器是基于它实现的。</string>
+   <string name="help_home1">主界面上方的保存按钮可以用于将当前界面下的日志信息保存到内部存储器的下载目录。</string>
+   <string name="help_home2">主界面下方的保存复选框可以用于向内部存储器的下载目录存储日志信息。这个日志信息是忽略过滤器的。</string>
+   <string name="help_menu">点击右上角的菜单按钮。</string>
+   <string name="help_filter">用户可以以组为单位添加过滤器。过滤器可以以组为单位进行保存和恢复。</string>
+   <string name="help_control1">用户可以设置日志等级。</string>
+   <string name="help_control2">用户可以发送Inject消息。</string>
+   <string name="help_control3">用户可以通过本功能在主画面的表格中跳转到指定行。</string>
+   <string name="help_search">用户可以根据关键词检索日志信息。关键词大小写不敏感。</string>
 </resources>
