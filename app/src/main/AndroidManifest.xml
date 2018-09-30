@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:a='http://schemas.android.com/apk/res/android' package='com.zeerd.dltviewer' a:versionCode='6' a:versionName='0.0.6'>
+<manifest xmlns:a='http://schemas.android.com/apk/res/android' package='com.zeerd.dltviewer' a:versionCode='7' a:versionName='0.0.7'>
     <uses-permission a:name='android.permission.INTERNET'/>
     <uses-permission a:name='android.permission.WRITE_EXTERNAL_STORAGE'/>
     <uses-permission a:name="android.permission.ACCESS_WIFI_STATE" />

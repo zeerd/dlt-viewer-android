@@ -8,6 +8,13 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       >
+      <CheckBox
+        android:id="@+id/checkbox_conn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:button="@drawable/connection"
+        android:text=""/>
       <EditText
         android:id="@+id/ip"
         android:layout_width="0dp"
@@ -16,11 +23,6 @@
         android:padding="10dp"
         android:textSize="8dp"
         />
-      <CheckBox android:id="@+id/checkbox_conn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/conn"/>
       <Button
         android:id="@+id/save"
         android:layout_width="0dp"
@@ -58,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/log_to_file"/>
-     <Button
+      <Button
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

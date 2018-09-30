@@ -1,5 +1,5 @@
 <resources>
-   <string name="scroll">Auto Scroll</string>
+   <string name="scroll">Scroll</string>
    <string name="setting">Setting</string>
    <string name="filter">Filter</string>
    <string name="help">Help</string>
