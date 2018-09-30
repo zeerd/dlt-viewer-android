@@ -31,8 +31,8 @@ There are English and Chinese support for this application.
 
 | Screen shot                 | Description                              |
 | --------------------------- | ---------------------------------------- |
-| ![home](doc/home.png){:height="50%" width="50%"}       | The save button at the top of the application used to save the logs shown on the screen. <br/> The save check-box at the bottom of the application used to save the dlt-format log into the download folder. The filter will not work for this function. Means all dlt logs received will be stored. |
-| ![menu](doc/menu.png){:height="25%" width="25%"}       | Touch Menu Button to open the menu.   |
-| ![filter](doc/filter.png =100x)   | User can add a group of filters. Users can save them in different files and reloaded them anytime. |
-| ![control](doc/control.png =100x) | Users could set log level with this function. <br/> Users could send inject message.  <br/> Users could use this function to jump to a given line on the home screen. |
-| ![search](doc/search.png =100x)   | Users could use a keyword to search in the payload on the home screen. This keyword is not case sensitive.  <br/> Long press a search result will jump to the position of the main screen. |
+| <img src="doc/home.png" width="48">       | The save button at the top of the application used to save the logs shown on the screen. <br/> The save check-box at the bottom of the application used to save the dlt-format log into the download folder. The filter will not work for this function. Means all dlt logs received will be stored. |
+| <img src="doc/menu.png" width="48">       | Touch Menu Button to open the menu.   |
+| <img src="doc/filter.png" width="48">   | User can add a group of filters. Users can save them in different files and reloaded them anytime. |
+| <img src="doc/control.png" width="48"> | Users could set log level with this function. <br/> Users could send inject message.  <br/> Users could use this function to jump to a given line on the home screen. |
+| <img src="doc/search.png" width="48">   | Users could use a keyword to search in the payload on the home screen. This keyword is not case sensitive.  <br/> Long press a search result will jump to the position of the main screen. |
