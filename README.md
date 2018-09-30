@@ -31,7 +31,7 @@ There are English and Chinese support for this application.
 
 | Screen shot                 | Description                              |
 | --------------------------- | ---------------------------------------- |
-| ![home](doc/home.png =100x)       | The save button at the top of the application used to save the logs shown on the screen. <br/> The save check-box at the bottom of the application used to save the dlt-format log into the download folder. The filter will not work for this function. Means all dlt logs received will be stored. |
+| ![home](doc/home.png =100x33)       | The save button at the top of the application used to save the logs shown on the screen. <br/> The save check-box at the bottom of the application used to save the dlt-format log into the download folder. The filter will not work for this function. Means all dlt logs received will be stored. |
 | ![menu](doc/menu.png =100x)       | Touch Menu Button to open the menu.   |
 | ![filter](doc/filter.png =100x)   | User can add a group of filters. Users can save them in different files and reloaded them anytime. |
 | ![control](doc/control.png =100x) | Users could set log level with this function. <br/> Users could send inject message.  <br/> Users could use this function to jump to a given line on the home screen. |
