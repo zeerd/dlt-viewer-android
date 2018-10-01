@@ -26,7 +26,6 @@
         android:onClick="searchFromLogs" />
   </LinearLayout >
 
-
   <ListView
     android:id="@+id/result_table"
     android:layout_width="fill_parent"

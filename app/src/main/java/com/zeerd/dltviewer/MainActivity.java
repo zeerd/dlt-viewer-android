@@ -364,7 +364,7 @@ public class MainActivity extends Activity {
 
     public String getDeviceWiFiIP()
     {
-        WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
+        WifiManager wifiMgr = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         WifiInfo wifiInfo = Objects.requireNonNull(wifiMgr).getConnectionInfo();
         int ip = wifiInfo.getIpAddress();
 
@@ -391,7 +391,7 @@ public class MainActivity extends Activity {
 
             List<LogRow> data;
             if(rtLogsList == null) {
-                data = new ArrayList<LogRow>();
+                data = new ArrayList<>();
             }
             else {
                 data = new ArrayList<>(rtLogsList);
@@ -464,8 +464,6 @@ public class MainActivity extends Activity {
     // This child thread class has it's own Looper and Handler object.
     // We use it to receive the logs from jni to reduce the workload of main thread.
     private class MyWorkerThread extends Thread{
-        // This is worker thread handler.
-        public Handler workerThreadHandler;
 
         @Override
         public void run() {
