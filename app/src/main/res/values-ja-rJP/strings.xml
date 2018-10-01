@@ -38,4 +38,6 @@
     <string name="help_control3">Users could use this function to jump to a given line on the home screen.</string>
     <string name="help_search">Users could use a keyword to search in the payload on the home screen. This keyword is not case sensitive. Long press a search result will jump to the position of the home screen.</string>
     <string name="about">About</string>
+    <string name="default_ip">デフォルトIP</string>
+    <string name="default_ecu">ECUID</string>
 </resources>

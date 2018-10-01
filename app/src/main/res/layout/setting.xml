@@ -2,63 +2,6 @@
    android:layout_width="match_parent"
    android:layout_height="match_parent"
    android:orientation="vertical" >
-
-  <LinearLayout
-      android:orientation="horizontal"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      >
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/save"
-        android:onClick="saveFilter" />
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/add"
-        android:onClick="addFilter" />
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/load"
-        android:onClick="loadFilter" />
-  </LinearLayout>
-  <TableLayout  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:stretchColumns="*" >
-        <TableRow>
-          <TextView
-              android:id="@+id/log_apid"
-              android:text="App ID"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:padding="10dp"
-              android:textSize="20dp"
-              android:textStyle="normal"/>
-          <TextView
-              android:id="@+id/log_ctid"
-              android:text="Ctxt ID"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:padding="10dp"
-              android:textSize="20dp"
-              android:textStyle="normal"/>
-          <TextView
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:text="@string/remove"
-              android:padding="10dp"
-              android:textSize="20dp" />
-        </TableRow>
-  </TableLayout>
   <ScrollView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -70,6 +13,56 @@
          android:layout_height="wrap_content"
          android:id="@+id/filter_table"
          android:stretchColumns="*" >
+        <TableRow>
+          <TextView
+              android:text="@string/default_ip"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:padding="10dp"
+              android:textSize="20sp"
+              android:textStyle="normal"/>
+          <EditText
+              android:id="@+id/default_target"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:padding="10dp"
+              android:textSize="20sp"
+              android:text="192.168.42.210"
+              />
+          <Button
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@android:string/ok"
+              android:onClick="setDefaultTarget"
+              android:padding="10dp"
+              android:textSize="20sp"
+              android:textStyle="normal" />
+        </TableRow>
+        <TableRow>
+          <TextView
+              android:text="@string/default_ecu"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:padding="10dp"
+              android:textSize="20sp"
+              android:textStyle="normal"/>
+          <EditText
+              android:id="@+id/default_ecu"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:padding="10dp"
+              android:textSize="20sp"
+              android:text="RECV"
+              />
+          <Button
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@android:string/ok"
+              android:onClick="setDefaultEcu"
+              android:padding="10dp"
+              android:textSize="20sp"
+              android:textStyle="normal" />
+        </TableRow>
       </TableLayout>
   </ScrollView>
   <LinearLayout
@@ -81,20 +74,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/del"
-        android:onClick="deleteFilter" />
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/clear"
-        android:onClick="clearFilter" />
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="@string/exit"
         android:onClick="returnSetting" />
-
   </LinearLayout>
 </LinearLayout>

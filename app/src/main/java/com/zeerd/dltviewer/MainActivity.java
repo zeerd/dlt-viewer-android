@@ -17,6 +17,7 @@ package com.zeerd.dltviewer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -83,20 +84,29 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        rtLogsList = new ArrayList<LogRow>();
+        rtLogsList = new ArrayList<>();
 
         MyWorkerThread workerThread = new MyWorkerThread();
         workerThread.start();
 
         setContentView(R.layout.activity_main);
 
-        ip = (EditText)MainActivity.this.findViewById(R.id.ip);
-        String wifiIP = getDeviceWiFiIP();
-        if(!wifiIP.equals("0.0.0.1")) {
-            ip.setText(wifiIP);
+        ip = (EditText) MainActivity.this.findViewById(R.id.ip);
+
+        SharedPreferences prefs = this.getSharedPreferences(
+                "com.zeerd.dltviewer", Context.MODE_PRIVATE);
+        String target = prefs.getString("com.zeerd.dltviewer.target", "");
+        if (target.equals("")) {
+            String wifiIP = getDeviceWiFiIP();
+            if (!wifiIP.equals("0.0.0.1")) {
+                ip.setText(wifiIP);
+            }
+            else {
+                ip.setText("192.168.42.210");
+            }
         }
         else {
-            ip.setText("192.168.42.210");
+            ip.setText(target);
         }
         setDltServerIp(ip.getText().toString());
 
@@ -247,8 +257,13 @@ public class MainActivity extends Activity {
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.filter: {
+                    case R.id.setting: {
                         Intent intent = new Intent(getBaseContext(), SettingActivity.class);
+                        startActivity(intent);
+                    }
+                    return true;
+                    case R.id.filter: {
+                        Intent intent = new Intent(getBaseContext(), FilterActivity.class);
                         startActivity(intent);
                     }
                     return true;

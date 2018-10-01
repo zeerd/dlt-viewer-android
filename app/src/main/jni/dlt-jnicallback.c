@@ -65,6 +65,7 @@ static pthread_t threadInfo_;
 static DltClient dltclient;
 static DltFilter dltfilter;
 static int ohandle = 0;
+static char ecuid[4+1] = "RECV";
 
 /*
  *  A helper function to show how to call
@@ -199,11 +200,11 @@ int dlt_receive_message_callback(DltMessage *message, void *data)
     /* prepare storage header */
     if (DLT_IS_HTYP_WEID(message->standardheader->htyp))
     {
-        dlt_set_storageheader(message->storageheader,message->headerextra.ecu);
+        dlt_set_storageheader(message->storageheader, message->headerextra.ecu);
     }
     else
     {
-        dlt_set_storageheader(message->storageheader,"AECU");
+        dlt_set_storageheader(message->storageheader, ecuid);
     }
 
     if(dlt_message_filter_check(message,&(dltfilter),0) == DLT_RETURN_TRUE) {
@@ -383,7 +384,7 @@ Java_com_zeerd_dltviewer_MainActivity_setDltServerFilter(
 }
 
 JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_SettingActivity_setDltServerFilter(
+Java_com_zeerd_dltviewer_FilterActivity_setDltServerFilter(
                     JNIEnv *env, jobject instance, jstring filter_in) {
     Java_com_zeerd_dltviewer_MainActivity_setDltServerFilter(env, instance, filter_in);
 }
@@ -509,4 +510,13 @@ Java_com_zeerd_dltviewer_ControlActivity_sendInject(JNIEnv *env, jobject instanc
     }
 
     LOGI("send inject message to [%s:%s:%d] : %s.\n", a, c, s, m);
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_SettingActivity_setEcuID(
+        JNIEnv *env, jobject instance, jstring ecu_in) {
+    char *e = (*env)->GetStringUTFChars(env, ecu_in, NULL);
+    strncpy(ecuid, e, 4);
+
+    LOGI("set ECU ID to %s.\n", ecuid);
 }

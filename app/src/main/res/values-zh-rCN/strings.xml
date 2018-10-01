@@ -37,4 +37,6 @@
    <string name="help_control3">用户可以通过本功能在主画面的表格中跳转到指定行。</string>
    <string name="help_search">用户可以根据关键词检索日志信息。关键词大小写不敏感。长压结果可以跳转的主页面的相应位置。</string>
     <string name="about">关于</string>
+    <string name="default_ip">默认目标</string>
+    <string name="default_ecu">ECUID</string>
 </resources>

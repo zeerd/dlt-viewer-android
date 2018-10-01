@@ -34,5 +34,11 @@
                 a:name="android.support.PARENT_ACTIVITY"
                 a:value=".MainActivity" />
         </activity>
+        <activity a:name=".FilterActivity"
+            a:parentActivityName=".MainActivity" >
+            <meta-data
+                a:name="android.support.PARENT_ACTIVITY"
+                a:value=".MainActivity" />
+        </activity>
     </application>
 </manifest>

@@ -68,3 +68,4 @@ fastlane/readme.md
 mykey.keystore
 lib/
 obj/
+release/

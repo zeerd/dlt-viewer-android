@@ -39,4 +39,6 @@
    <string name="dlt_viewer_for_android" translatable="false">DLT-Viewer for Android</string>
    <string name="home_url" translatable="false">https://github.com/zeerd/dlt-viewer-android</string>
     <string name="about">About</string>
+   <string name="default_ip">Target</string>
+   <string name="default_ecu">ECUID</string>
 </resources>
