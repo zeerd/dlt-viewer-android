@@ -14,15 +14,15 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="10dp"
-        android:textSize="20dp"
-        />
+        android:textSize="20sp"
+          android:inputType="number" />
       <Button
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/search"
         android:padding="10dp"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:onClick="searchFromLogs" />
   </LinearLayout >
 
@@ -30,7 +30,7 @@
   <ListView
     android:id="@+id/result_table"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="0dp"
     android:layout_weight="1"
     />
 

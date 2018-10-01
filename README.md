@@ -35,4 +35,4 @@ There are English and Chinese support for this application.
 | <img src="doc/menu.png" width="48">       | Touch Menu Button to open the menu.   |
 | <img src="doc/filter.png" width="48">   | User can add a group of filters. Users can save them in different files and reloaded them anytime. |
 | <img src="doc/control.png" width="48"> | Users could set log level with this function. <br/> Users could send inject message.  <br/> Users could use this function to jump to a given line on the home screen. |
-| <img src="doc/search.png" width="48">   | Users could use a keyword to search in the payload on the home screen. This keyword is not case sensitive.  <br/> Long press a search result will jump to the position of the main screen. |
+| <img src="doc/search.png" width="48">   | Users could use a keyword to search in the payload on the home screen. This keyword is not case sensitive.  <br/> Long press a search result will jump to the position of the home screen. |

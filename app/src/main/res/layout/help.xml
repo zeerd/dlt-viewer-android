@@ -4,13 +4,13 @@
    android:orientation="vertical" >
   <ScrollView
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="0dp"
     android:scrollbars="none"
     android:id="@+id/help_scroll"
     android:layout_weight="1">
       <TableLayout  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
          android:layout_width="match_parent"
-         android:layout_height="match_parent"
+         android:layout_height="wrap_content"
          android:id="@+id/log_table"
          android:stretchColumns="1*" >
         <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
@@ -20,21 +20,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:textSize="20dp"
-            android:text="DLT-Viewer for Android"
+            android:textSize="20sp"
+            android:text="@string/dlt_viewer_for_android"
             android:textStyle="normal"
             />
         </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:layout_weight="1"
-                android:background="#FF909090"
-                android:padding="2dip" />
-        </TableRow>
+
         <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
           <TextView
             android:layout_width="0dp"
@@ -69,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="@string/home"
             android:textStyle="normal"
             />
@@ -98,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="@string/menu"
             android:textStyle="normal"
             />
@@ -118,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="@string/filter"
             android:textStyle="normal"
             />
@@ -138,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="@string/control"
             android:textStyle="normal"
             />
@@ -176,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="@string/search"
             android:textStyle="normal"
             />
@@ -202,10 +193,21 @@
         </TableRow>
         <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
           <TextView
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:padding="10dp"
+              android:textSize="20sp"
+              android:text="@string/about"
+              android:textStyle="normal"
+              />
+        </TableRow>
+        <TableRow xmlns:android="http://schemas.android.com/apk/res/android">
+          <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="https://github.com/zeerd/dlt-viewer-android"
+            android:text="@string/home_url"
             android:textStyle="normal"
             />
         </TableRow>

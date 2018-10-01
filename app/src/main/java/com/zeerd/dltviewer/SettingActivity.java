@@ -27,14 +27,13 @@ import android.widget.PopupMenu;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
-
-import com.zeerd.dltviewer.R;
+import java.io.OutputStreamWriter;
 
 public class SettingActivity extends Activity {
 
@@ -124,7 +123,7 @@ public class SettingActivity extends Activity {
                         myOutWriter.append("----\n");
                     }
                     else {
-                        myOutWriter.append(r + "\n");
+                        myOutWriter.append(r).append("\n");
                     }
                     EditText ctid = (EditText)row.findViewById(R.id.filter_ctid);
                     r = ctid.getText().toString();
@@ -132,7 +131,7 @@ public class SettingActivity extends Activity {
                         myOutWriter.append("----\n");
                     }
                     else {
-                        myOutWriter.append(r + "\n");
+                        myOutWriter.append(r).append("\n");
                     }
                 }
             }
@@ -255,9 +254,9 @@ public class SettingActivity extends Activity {
         File[] files = directory.listFiles();
         if(files.length > 0) {
             PopupMenu popup = new PopupMenu(this, v);
-            for (int i = 0; i < files.length; i++) {
-                String name = files[i].getName();
-                if(name.substring(name.lastIndexOf('.')).equals(".filter")) {
+            for (File file : files) {
+                String name = file.getName();
+                if (name.substring(name.lastIndexOf('.')).equals(".filter")) {
                     popup.getMenu().add(name.substring(0, name.lastIndexOf('.')));
                 }
             }

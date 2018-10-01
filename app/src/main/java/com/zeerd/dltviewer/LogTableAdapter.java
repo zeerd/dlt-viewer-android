@@ -13,32 +13,25 @@
 
 package com.zeerd.dltviewer;
 
-import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class LogTableAdapter extends BaseAdapter {
     private Activity activity;
     private List<LogRow> rows;
-    private static final String TAG = "DLT-Viewer";
 
     private static class ViewHolder {
         private TextView[] column = new TextView[LogRow.ROW_COUNT];
     }
 
-    public LogTableAdapter(Activity activity, List<LogRow> rows) {
-        super();
-        this.activity = activity;
-        this.rows = rows;
-    }
-
-    public LogTableAdapter(Activity activity) {
+    LogTableAdapter(Activity activity) {
         super();
         this.activity = activity;
     }
@@ -72,11 +65,11 @@ public class LogTableAdapter extends BaseAdapter {
         return 0;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         int i;
-        LogRow logRow = (LogRow)getItem(position);
 
         ViewHolder viewHolder;
         if (convertView == null) {
@@ -113,20 +106,23 @@ public class LogTableAdapter extends BaseAdapter {
         viewHolder.column[LogRow.ROW_SUBTYPE].setText(subtype);
         viewHolder.column[LogRow.ROW_PAYLOAD].setText(rows.get(position).getColumn(LogRow.ROW_PAYLOAD));
 
-        if(subtype.equals("error") || subtype.equals("fatal")) {
-            for(i=0;i<LogRow.ROW_COUNT;i++) {
-                viewHolder.column[i].setBackgroundResource(R.drawable.border_red);
-            }
-        }
-        else if(subtype.equals("warn")) {
-            for(i=0;i<LogRow.ROW_COUNT;i++) {
-                viewHolder.column[i].setBackgroundResource(R.drawable.border_yellow);
-            }
-        }
-        else {
-            for(i=0;i<LogRow.ROW_COUNT;i++) {
-                viewHolder.column[i].setBackgroundResource(R.drawable.border);
-            }
+        switch (subtype) {
+            case "error":
+            case "fatal":
+                for (i = 0; i < LogRow.ROW_COUNT; i++) {
+                    viewHolder.column[i].setBackgroundResource(R.drawable.border_red);
+                }
+                break;
+            case "warn":
+                for (i = 0; i < LogRow.ROW_COUNT; i++) {
+                    viewHolder.column[i].setBackgroundResource(R.drawable.border_yellow);
+                }
+                break;
+            default:
+                for (i = 0; i < LogRow.ROW_COUNT; i++) {
+                    viewHolder.column[i].setBackgroundResource(R.drawable.border);
+                }
+                break;
         }
 
         return convertView;

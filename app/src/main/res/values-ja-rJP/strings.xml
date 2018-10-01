@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name = "scroll">スクロール</string>
+  <string name = "setting">設定</string>
+  <string name = "filter">フィルタ</string>
+  <string name = "help">ヘルプ</string>
+  <string name = "save">保存</string>
+  <string name = "remove">削除</string>
+  <string name = "add">追加</string>
+  <string name = "del">削除</string>
+  <string name = "load">読み取り</string>
+  <string name = "exit">戻り値</string>
+  <string name = "clear">クリア</string>
+  <string name = "conn">接続</string>
+  <string name = "log_to_file">Fileを保存</string>
+  <string name = "control">コントロール</string>
+  <string name = "default_level">デフォルトのログレベル</string>
+  <string name = "search">検索</string>
+  <string name = "goto_line">ジャンプ先</string>
+  <string name = "start_to_save_log">ログの保存を開始する</string>
+  <string name = "file_saved">ファイルが格納されている</string>
+  <string name = "twice_to_exit">戻りキーをもう一度押して終了します</string>
+  <string name = "disconn_daemon">サービスとの接続が切断されました</string>
+  <string name = "search_finish">検索終了</string>
+  <string name = "input_filename">入力ファイル名</string>
+  <string name = "filter_save">フィルタが格納されています</string>
+  <string name = "filter_load">フィルターがロードされています</string>
+  <string name = "menu">メニュー</string>
+  <string name = "home">メインスクリーン</string>
+    <string name="help_view">The DLT Viewer for Android is an application that can receive messages from the DLT daemon with filter.</string>
+    <string name="help_daemon">DLT, short for Diagnostic Log and Trace, provides a log and trace interface, based on the standardised protocol specified in the AUTOSAR standard 4.0 DLT. There is a famous implemention of DLT by GENIVI Alliance. This viewer is based on it.</string>
+    <string name="help_home1">The save button at the top of the application used to save the logs shown on the screen.</string>
+    <string name="help_home2">The save check-box at the bottom of the application used to save the dlt-format log into the download folder. The filter will not work for this function. Means all dlt logs received will be stored.</string>
+    <string name="help_menu">Touch Setting Button to open the menu.</string>
+    <string name="help_filter">User can add a group of filters. Users can save them in different files and reloaded them anytime.</string>
+    <string name="help_control1">Users could set log level with this function.</string>
+    <string name="help_control2">Users could send inject message.</string>
+    <string name="help_control3">Users could use this function to jump to a given line on the home screen.</string>
+    <string name="help_search">Users could use a keyword to search in the payload on the home screen. This keyword is not case sensitive. Long press a search result will jump to the position of the home screen.</string>
+    <string name="about">About</string>
+</resources>

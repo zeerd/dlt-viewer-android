@@ -15,21 +15,14 @@ package com.zeerd.dltviewer;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.zeerd.dltviewer.R;
 
 public class ControlActivity extends Activity {
 
-    private static final String TAG = "DLT-Viewer";
-    private static final String [] langurage ={"off","fatal","error","warn","info","debug","Verbose"};
-
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.control);
@@ -115,7 +108,6 @@ public class ControlActivity extends Activity {
         System.loadLibrary("dlt-jnicallback");
     }
     public native void setDefaultLevel(int level);
-    public native void setAllLevel(int level);
     public native void setLevel(String apid, String ctid, int level);
     public native void sendInject(String apid, String ctid, int sid, String msg, int hex);
 

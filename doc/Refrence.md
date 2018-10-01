@@ -29,3 +29,7 @@
 [Show a context menu for long-clicks in an Android ListView](https://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/)
 
 [Using an ArrayAdapter with ListView](https://github.com/codepath/android_guides/wiki/Using-an-ArrayAdapter-with-ListView)
+
+## Others
+
+some of the pictures in drawable folder come from dlt-viewer.

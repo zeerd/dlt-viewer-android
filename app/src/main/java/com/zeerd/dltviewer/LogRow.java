@@ -13,30 +13,27 @@
 
 package com.zeerd.dltviewer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LogRow {
 
-    public static final int ROW_INDEX = 0;
-    public static final int ROW_TIMESTAMP = 1;
-    public static final int ROW_ECUID = 2;
-    public static final int ROW_APID = 3;
-    public static final int ROW_CTID = 4;
-    public static final int ROW_SUBTYPE = 5;
-    public static final int ROW_PAYLOAD = 6;
-    public static final int ROW_COUNT = 7;
+    static final int ROW_INDEX = 0;
+    static final int ROW_TIMESTAMP = 1;
+    static final int ROW_ECUID = 2;
+    static final int ROW_APID = 3;
+    static final int ROW_CTID = 4;
+    static final int ROW_SUBTYPE = 5;
+    static final int ROW_PAYLOAD = 6;
+    static final int ROW_COUNT = 7;
 
     private String[] column = new String[ROW_COUNT];
 
-    public LogRow(
-                String index,
-                String timestamp,
-                String ecuid,
-                String apid,
-                String ctid,
-                String subtype,
-                String payload) {
+    LogRow(
+            String index,
+            String timestamp,
+            String ecuid,
+            String apid,
+            String ctid,
+            String subtype,
+            String payload) {
 
         super();
         this.column[ROW_INDEX] = index;
@@ -48,14 +45,14 @@ public class LogRow {
         this.column[ROW_PAYLOAD] = payload;
     }
 
-    public String getColumn(int index) {
+    String getColumn(int index) {
         return column[index];
     }
     public void setColumn(int index, String str) {
         this.column[index] = str;
     }
 
-    public int getIndex() {
+    int getIndex() {
         return Integer.parseInt(this.column[ROW_INDEX]);
     }
 }

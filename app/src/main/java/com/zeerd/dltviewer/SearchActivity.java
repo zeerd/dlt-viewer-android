@@ -15,36 +15,25 @@ package com.zeerd.dltviewer;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.zeerd.dltviewer.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends Activity {
 
-    private static final String TAG = "DLT-Viewer";
-
-    private ListView listviewResultTable;
     private LogTableAdapter adapterLogs;
-    private TableInitTask initTask;
     private SharedPreferences prefs;
     ProgressBar progressBar;
 
@@ -55,7 +44,7 @@ public class SearchActivity extends Activity {
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        listviewResultTable = (ListView)findViewById(R.id.result_table);
+        ListView listviewResultTable = (ListView) findViewById(R.id.result_table);
 
         adapterLogs = new LogTableAdapter(this);
         listviewResultTable.setAdapter(adapterLogs);
@@ -74,8 +63,8 @@ public class SearchActivity extends Activity {
         prefs.edit().putString(
             "com.zeerd.dltviewer.keyword",
             ((EditText)findViewById(R.id.keyword)).getText().toString()).apply();
-        initTask = new TableInitTask(this,
-                    adapterLogs, MainActivity.rtLogsList.size(), progressBar);
+        TableInitTask initTask = new TableInitTask(
+                adapterLogs, MainActivity.rtLogsList.size(), progressBar);
         initTask.execute();
     }
 
@@ -99,14 +88,12 @@ public class SearchActivity extends Activity {
 
         private static final String TAG = "DLT-Viewer";
 
-        private Context mContext;
         private LogTableAdapter mTableAdapter;
         private ProgressBar mProgressBar;
         private int mLineCount;
 
-        public TableInitTask(Context context, LogTableAdapter tableAdapter, int lineCount, ProgressBar progressBar) {
+        TableInitTask(LogTableAdapter tableAdapter, int lineCount, ProgressBar progressBar) {
             super();
-            mContext = context;
             mTableAdapter = tableAdapter;
             mProgressBar = progressBar;
             mLineCount = lineCount;
@@ -126,7 +113,7 @@ public class SearchActivity extends Activity {
             Log.i(TAG, "TableInitTask::doInBackground()");
 
             EditText kw = (EditText)findViewById(R.id.keyword);
-            List<LogRow> data = new ArrayList<LogRow>();
+            List<LogRow> data = new ArrayList<>();
 
             String keyword = kw.getText().toString().toLowerCase();
             for (int i = 0; i < MainActivity.rtLogsList.size(); i++) {

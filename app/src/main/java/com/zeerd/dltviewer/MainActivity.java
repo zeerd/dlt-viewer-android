@@ -59,6 +59,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -66,14 +68,12 @@ public class MainActivity extends Activity {
 
     private int type = 2; /* 0=header, 1=payload, 2=msg */
     private String sHeader= "";
-    private ScrollView scrollView;
     private CheckBox checkBox;
     private CheckBox checkBoxConn;
     private EditText ip;
     private String dltFile;
     private ListView listviewLogTable;
     private LogTableAdapter adapterLogs;
-    private MyWorkerThread workerThread = null;
     private TableInitTask initTask;
 
     public static List<LogRow> rtLogsList;
@@ -85,11 +85,10 @@ public class MainActivity extends Activity {
 
         rtLogsList = new ArrayList<LogRow>();
 
-        workerThread = new MyWorkerThread();
+        MyWorkerThread workerThread = new MyWorkerThread();
         workerThread.start();
 
         setContentView(R.layout.activity_main);
-        scrollView = (ScrollView)MainActivity.this.findViewById(R.id.log_scroll);
 
         ip = (EditText)MainActivity.this.findViewById(R.id.ip);
         String wifiIP = getDeviceWiFiIP();
@@ -324,12 +323,12 @@ public class MainActivity extends Activity {
 
             for (int i = 0; i < rtLogsList.size(); i++) {
                 LogRow row = rtLogsList.get(i);
-                myOutWriter.append(row.getColumn(LogRow.ROW_TIMESTAMP) + " ");
-                myOutWriter.append(row.getColumn(LogRow.ROW_ECUID) + " ");
-                myOutWriter.append(row.getColumn(LogRow.ROW_APID) + " ");
-                myOutWriter.append(row.getColumn(LogRow.ROW_CTID) + " ");
-                myOutWriter.append(row.getColumn(LogRow.ROW_SUBTYPE) + " ");
-                myOutWriter.append(row.getColumn(LogRow.ROW_PAYLOAD) + "\n");
+                myOutWriter.append(row.getColumn(LogRow.ROW_TIMESTAMP)).append(" ");
+                myOutWriter.append(row.getColumn(LogRow.ROW_ECUID)).append(" ");
+                myOutWriter.append(row.getColumn(LogRow.ROW_APID)).append(" ");
+                myOutWriter.append(row.getColumn(LogRow.ROW_CTID)).append(" ");
+                myOutWriter.append(row.getColumn(LogRow.ROW_SUBTYPE)).append(" ");
+                myOutWriter.append(row.getColumn(LogRow.ROW_PAYLOAD)).append("\n");
             }
 
             myOutWriter.close();
@@ -351,10 +350,10 @@ public class MainActivity extends Activity {
     public String getDeviceWiFiIP()
     {
         WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+        WifiInfo wifiInfo = Objects.requireNonNull(wifiMgr).getConnectionInfo();
         int ip = wifiInfo.getIpAddress();
 
-        return String.format("%d.%d.%d.1", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff));
+        return String.format(Locale.ENGLISH, "%d.%d.%d.1", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff));
     }
 
     // This thread use to update the listview's adapter.
@@ -459,7 +458,7 @@ public class MainActivity extends Activity {
             Looper.prepare();
 
             // Create child thread Handler.
-            Handler handler = new Handler() {
+            staticHandler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
                     Bundle bundle = msg.getData();
@@ -469,7 +468,6 @@ public class MainActivity extends Activity {
 
                 }
             };
-            staticHandler = handler;
 
             // Loop the child thread message queue.
             Looper.loop();
