@@ -21,6 +21,7 @@ echo "Compiling..."
 install -d obj
 JAVAC="javac -d obj -classpath app/src/main/java -bootclasspath $PLATFORM -source 1.7 -target 1.7 -Xlint:deprecation"
 $JAVAC app/src/main/java/com/zeerd/dltviewer/FilterActivity.java
+$JAVAC app/src/main/java/com/zeerd/dltviewer/CustomExceptionHandler.java
 $JAVAC app/src/main/java/com/zeerd/dltviewer/SearchActivity.java
 $JAVAC app/src/main/java/com/zeerd/dltviewer/SettingActivity.java
 $JAVAC app/src/main/java/com/zeerd/dltviewer/HelpActivity.java
