@@ -8,25 +8,29 @@
     android:scrollbars="none"
     android:id="@+id/log_scroll"
     android:layout_weight="1">
-      <TableLayout  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:id="@+id/filter_table"
-         android:stretchColumns="*" >
-        <TableRow>
+      <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+          <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
           <TextView
               android:text="@string/default_ip"
-              android:layout_width="wrap_content"
+              android:layout_width="0dp"
               android:layout_height="wrap_content"
+              android:layout_weight="1"
               android:padding="10dp"
               android:textSize="20sp"
               android:textStyle="normal"/>
           <EditText
               android:id="@+id/default_target"
-              android:layout_width="wrap_content"
+              android:layout_width="0dp"
               android:layout_height="wrap_content"
+              android:layout_weight="1"
               android:padding="10dp"
-              android:textSize="20sp"
+              android:textSize="16sp"
               android:text="192.168.42.210"
               />
           <Button
@@ -37,21 +41,26 @@
               android:padding="10dp"
               android:textSize="20sp"
               android:textStyle="normal" />
-        </TableRow>
-        <TableRow>
+        </LinearLayout>
+        <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
           <TextView
               android:text="@string/default_ecu"
-              android:layout_width="wrap_content"
+              android:layout_width="0dp"
               android:layout_height="wrap_content"
+              android:layout_weight="1"
               android:padding="10dp"
               android:textSize="20sp"
               android:textStyle="normal"/>
           <EditText
               android:id="@+id/default_ecu"
-              android:layout_width="wrap_content"
+              android:layout_width="0dp"
               android:layout_height="wrap_content"
+              android:layout_weight="1"
               android:padding="10dp"
-              android:textSize="20sp"
+              android:textSize="16sp"
               android:text="RECV"
               />
           <Button
@@ -62,12 +71,16 @@
               android:padding="10dp"
               android:textSize="20sp"
               android:textStyle="normal" />
-        </TableRow>
-        <TableRow>
+        </LinearLayout>
+        <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
           <TextView
               android:text="@string/debug_report"
-              android:layout_width="wrap_content"
+              android:layout_width="0dp"
               android:layout_height="wrap_content"
+              android:layout_weight="1"
               android:padding="10dp"
               android:textSize="20sp"
               android:textStyle="normal"/>
@@ -77,11 +90,9 @@
               android:layout_height="wrap_content"
               android:padding="10dp"
               android:textSize="20sp"
-              android:textOff="OFF"
-              android:textOn="ON"
               />
-        </TableRow>
-      </TableLayout>
+        </LinearLayout>
+      </LinearLayout>
   </ScrollView>
   <LinearLayout
       android:orientation="horizontal"

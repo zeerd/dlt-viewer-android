@@ -31,7 +31,7 @@
     <string name="help_daemon">DLT, short for Diagnostic Log and Trace, provides a log and trace interface, based on the standardised protocol specified in the AUTOSAR standard 4.0 DLT. There is a famous implemention of DLT by GENIVI Alliance. This viewer is based on it.</string>
     <string name="help_home1">The save button at the top of the application used to save the logs shown on the screen.</string>
     <string name="help_home2">The save check-box at the bottom of the application used to save the dlt-format log into the download folder. The filter will not work for this function. Means all dlt logs received will be stored.</string>
-    <string name="help_menu">Touch Setting Button to open the menu.</string>
+    <string name="help_setting1">If enable the debug report, a trace log will be generated into the download folder when application crashed.</string>
     <string name="help_filter">User can add a group of filters. Users can save them in different files and reloaded them anytime.</string>
     <string name="help_control1">Users could set log level with this function.</string>
     <string name="help_control2">Users could send inject message.</string>
