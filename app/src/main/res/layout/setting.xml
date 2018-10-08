@@ -63,6 +63,24 @@
               android:textSize="20sp"
               android:textStyle="normal" />
         </TableRow>
+        <TableRow>
+          <TextView
+              android:text="@string/debug_report"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:padding="10dp"
+              android:textSize="20sp"
+              android:textStyle="normal"/>
+          <Switch
+              android:id="@+id/debug_switch"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:padding="10dp"
+              android:textSize="20sp"
+              android:textOff="OFF"
+              android:textOn="ON"
+              />
+        </TableRow>
       </TableLayout>
   </ScrollView>
   <LinearLayout

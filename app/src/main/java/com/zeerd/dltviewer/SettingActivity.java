@@ -19,7 +19,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 
 public class SettingActivity extends Activity {
 
@@ -37,6 +39,18 @@ public class SettingActivity extends Activity {
         ((EditText)findViewById(R.id.default_target)).setText(target);
         String ecu = prefs.getString("com.zeerd.dltviewer.ecu", "RECV");
         ((EditText)findViewById(R.id.default_ecu)).setText(ecu);
+
+        Switch onOffSwitch = (Switch)  findViewById(R.id.debug_switch);
+        boolean dbg = prefs.getBoolean("com.zeerd.dltviewer.debug", false);
+        onOffSwitch.setChecked(dbg);
+        onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                prefs.edit().putBoolean(
+                        "com.zeerd.dltviewer.debug",
+                        isChecked).apply();
+                Log.i(TAG, "set debug report to " + isChecked);
+            }
+        });
     }
 
     public void setDefaultTarget(View v) {

@@ -153,7 +153,7 @@ public class MainActivity extends Activity {
         timer.scheduleAtFixedRate(t,500,500);
 
         if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
-            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler());
+            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this));
         }
     }
 

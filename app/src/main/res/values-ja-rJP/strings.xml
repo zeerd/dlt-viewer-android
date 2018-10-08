@@ -40,4 +40,5 @@
     <string name="about">About</string>
     <string name="default_ip">デフォルトIP</string>
     <string name="default_ecu">ECUID</string>
+    <string name="debug_report">デバッグのレポート</string>
 </resources>

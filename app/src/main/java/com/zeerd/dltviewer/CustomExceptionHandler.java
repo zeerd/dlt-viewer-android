@@ -10,33 +10,44 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 
 public class CustomExceptionHandler implements UncaughtExceptionHandler {
 
     private UncaughtExceptionHandler defaultUEH;
+    private Activity mActivity;
 
     /*
      * if any of the parameters is null, the respective functionality
      * will not be used
      */
-    CustomExceptionHandler() {
+    CustomExceptionHandler(Activity activity) {
+        this.mActivity = activity;
         this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
     }
 
     public void uncaughtException(Thread t, Throwable e) {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("yyyyMMddHHmmss");
-        String filename = "dlt-"
-                + mdformat.format(calendar.getTime())
-                + ".stacktrace";
-        final Writer result = new StringWriter();
-        final PrintWriter printWriter = new PrintWriter(result);
-        e.printStackTrace(printWriter);
-        String stacktrace = result.toString();
-        printWriter.close();
+        SharedPreferences prefs = this.mActivity.getSharedPreferences(
+                "com.zeerd.dltviewer", Context.MODE_PRIVATE);
+        boolean dbg = prefs.getBoolean("com.zeerd.dltviewer.debug", true);
 
-        writeToFile(stacktrace, filename);
+        if(dbg) {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat mdformat = new SimpleDateFormat("yyyyMMddHHmmss");
+            String filename = "dlt-"
+                    + mdformat.format(calendar.getTime())
+                    + ".stacktrace";
+            final Writer result = new StringWriter();
+            final PrintWriter printWriter = new PrintWriter(result);
+            e.printStackTrace(printWriter);
+            String stacktrace = result.toString();
+            printWriter.close();
+
+            writeToFile(stacktrace, filename);
+        }
 
         defaultUEH.uncaughtException(t, e);
     }
