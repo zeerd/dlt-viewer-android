@@ -1,6 +1,6 @@
 # Dlt-Viewer On Android
 
-## Refrence:
+## Reference:
 
 [How to make Android apps without IDE from command line](https://medium.com/@authmane512/how-to-build-an-apk-from-command-line-without-ide-7260e1e22676)
 
@@ -29,6 +29,8 @@
 [Show a context menu for long-clicks in an Android ListView](https://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/)
 
 [Using an ArrayAdapter with ListView](https://github.com/codepath/android_guides/wiki/Using-an-ArrayAdapter-with-ListView)
+
+[How do I obtain crash-data from my Android application?](https://stackoverflow.com/questions/601503/how-do-i-obtain-crash-data-from-my-android-application)
 
 ## Others
 
