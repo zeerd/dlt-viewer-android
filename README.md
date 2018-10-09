@@ -12,7 +12,7 @@
 ## Build (Android Studio)
 
 Nothing to say about this. Just follow the hints of android studio itself.
-I am really not good at the android studio thingsgit .
+I am really not good at the android studio things .
 
 ## Build (Linux Terminal)
 
