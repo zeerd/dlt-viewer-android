@@ -3,8 +3,8 @@
     <uses-permission a:name='android.permission.INTERNET'/>
     <uses-permission a:name='android.permission.WRITE_EXTERNAL_STORAGE'/>
     <uses-permission a:name="android.permission.ACCESS_WIFI_STATE" />
-    <application a:label='Dlt Viewer Android' a:icon='@drawable/ic_launcher'>
-        <activity a:name='com.zeerd.dltviewer.MainActivity'>
+    <application a:label='Dlt Viewer' a:icon='@drawable/ic_launcher'>
+        <activity a:name='com.zeerd.dltviewer.MainActivity' a:launchMode="singleTop">
              <intent-filter>
                 <category a:name='android.intent.category.LAUNCHER'/>
                 <action a:name='android.intent.action.MAIN'/>

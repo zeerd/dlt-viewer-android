@@ -84,6 +84,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.v(TAG, "onCreate()");
+
         rtLogsList = new ArrayList<>();
 
         MyWorkerThread workerThread = new MyWorkerThread();

@@ -32,6 +32,7 @@
 
 [How do I obtain crash-data from my Android application?](https://stackoverflow.com/questions/601503/how-do-i-obtain-crash-data-from-my-android-application)
 
+[How can I return to a parent activity correctly?](https://stackoverflow.com/questions/12276027/how-can-i-return-to-a-parent-activity-correctly/15933890#15933890)
 ## Others
 
 some of the pictures in drawable folder come from dlt-viewer.

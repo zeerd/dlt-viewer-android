@@ -12,7 +12,7 @@
 ## Build (Android Studio)
 
 Nothing to say about this. Just follow the hints of android studio itself.
-I am really not good at the android studio things .
+I am really not good at the android studio things.
 
 ## Build (Linux Terminal)
 
@@ -20,7 +20,7 @@ I am really not good at the android studio things .
 1. Download Android [SDK](https://medium.com/@authmane512/how-to-build-an-apk-from-command-line-without-ide-7260e1e22676) and [NDK](https://software.intel.com/en-us/articles/building-an-android-command-line-application-using-the-ndk-build-tools).
 2. Unzip those packages into /opt folder.
 3. Install the components.
-```(base)
+```(bash)
    $ unzip android-ndk-r16b-linux-x86_64.zip -d /opt/
    $ unzip sdk-tools-linux-3859397.zip -d /opt/android-sdk/
    $ /opt/android-sdk/tools/bin/sdkmanager "build-tools;23.0.3" "build-tools;26.0.1" "platforms;android-23" "platform-tools"
@@ -29,7 +29,7 @@ I am really not good at the android studio things .
 
 ### Build
 1. make a key for sign
-```(shell)
+```(bash)
    $ keytool -genkeypair -validity 36500 -keystore mykey.keystore -keyalg RSA -keysize 2048
 ```
 2. run build.sh
