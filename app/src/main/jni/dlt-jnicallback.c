@@ -66,6 +66,7 @@ static DltClient dltclient;
 static DltFilter dltfilter;
 static int ohandle = 0;
 static char ecuid[4+1] = "RECV";
+static int vflag = 0;
 
 /*
  *  A helper function to show how to call
@@ -153,6 +154,12 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
     g_ctx.jniHelperObj = (*env)->NewGlobalRef(env, handler);
     queryRuntimeInfo(env, g_ctx.jniHelperObj);
 
+    g_ctx.statusId = (*env)->GetMethodID(env, g_ctx.jniHelperClz,
+                                                 "updateStatus",
+                                                 "(Ljava/lang/String;)V");
+
+    (*(g_ctx.javaVM))->GetEnv(g_ctx.javaVM, (void**)&(g_ctx.env), JNI_VERSION_1_6);
+
     g_ctx.running = 0;
     g_ctx.mainActivityObj = NULL;
 
@@ -180,17 +187,32 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 void   sendJavaMsg(JNIEnv *env, jobject instance,
                    jmethodID func,const char* msg) {
 
-    // LOGI("%s ",msg);
+    LOGI("%s %p %p %p",msg, env, instance, func);
 
     jstring javaMsg = (*env)->NewStringUTF(env, msg);
+    LOGI("%s ",msg);
     (*env)->CallVoidMethod(env, instance, func, javaMsg);
+    LOGI("%s ",msg);
     (*env)->DeleteLocalRef(env, javaMsg);
+}
+
+void send_message_to_java(LogContext *pctx, DltMessage *message) {
+    static char text[DLT_RECEIVE_TEXTBUFSIZE];
+
+    dlt_message_header(message,text,DLT_RECEIVE_TEXTBUFSIZE, 0);
+    sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "header");
+    sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, text);
+
+    dlt_message_payload(message,text,DLT_RECEIVE_TEXTBUFSIZE,DLT_OUTPUT_ASCII,0);
+    sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "payload");
+    sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, text);
+
+    LOGI("send_message_to_java : %s\n", text);
 }
 
 int dlt_receive_message_callback(DltMessage *message, void *data)
 {
     LogContext *pctx = (LogContext*) data;
-    static char text[DLT_RECEIVE_TEXTBUFSIZE];
 
     if ((message==0) || (data==0))
     {
@@ -209,13 +231,7 @@ int dlt_receive_message_callback(DltMessage *message, void *data)
 
     if(dlt_message_filter_check(message,&(dltfilter),0) == DLT_RETURN_TRUE) {
 
-        dlt_message_header(message,text,DLT_RECEIVE_TEXTBUFSIZE, 0);
-        sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "header");
-        sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, text);
-
-        dlt_message_payload(message,text,DLT_RECEIVE_TEXTBUFSIZE,DLT_OUTPUT_ASCII,0);
-        sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "payload");
-        sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, text);
+        send_message_to_java(pctx, message);
     }
 
     pthread_mutex_lock(&g_ctx.lock);
@@ -251,9 +267,6 @@ void*  UpdateLogs(void* context) {
         }
     }
 
-    pctx->statusId = (*(pctx->env))->GetMethodID((pctx->env), pctx->jniHelperClz,
-                                             "updateStatus",
-                                             "(Ljava/lang/String;)V");
     sendJavaMsg((pctx->env), pctx->jniHelperObj, pctx->statusId,
                 "LogerThread status: initializing...");
 
@@ -415,6 +428,32 @@ Java_com_zeerd_dltviewer_MainActivity_stopRecordLogs(JNIEnv *env, jobject instan
 }
 
 JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance, jstring file) {
+
+    DltFile dlt_file;
+    dlt_file_init(&dlt_file, vflag);
+
+    const char *f = (*env)->GetStringUTFChars(env, file, NULL);
+    LOGI("loading dlt file : %s.\n", f);
+
+    if (dlt_file_open(&dlt_file, f, vflag) >= DLT_RETURN_OK) {
+        while (dlt_file_read(&dlt_file, vflag) >= DLT_RETURN_OK) {
+        }
+    }
+    else {
+        LOGE("load dlt file failed : %s.\n", f);
+    }
+
+    int num;
+    for (num = 0; num <= dlt_file.counter-1 ;num++) {
+        dlt_file_message(&dlt_file, num, vflag);
+        send_message_to_java(&g_ctx, &(dlt_file.msg));
+    }
+
+    dlt_file_free(&dlt_file,vflag);
+}
+
+JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_ControlActivity_setDefaultLevel(JNIEnv *env, jobject instance, jint level) {
 
     dlt_client_send_default_log_level(&dltclient, (int)level);
@@ -431,53 +470,43 @@ Java_com_zeerd_dltviewer_ControlActivity_setAllLevel(JNIEnv *env, jobject instan
 JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_ControlActivity_setLevel(JNIEnv *env, jobject instance, jstring apid, jstring ctid, jint level) {
 
-    char *a = (*env)->GetStringUTFChars(env, apid, NULL);
-    char *c = (*env)->GetStringUTFChars(env, ctid, NULL);
+    const char *a = (*env)->GetStringUTFChars(env, apid, NULL);
+    const char *c = (*env)->GetStringUTFChars(env, ctid, NULL);
     dlt_client_send_log_level(&dltclient, a, c, (int)level);
     LOGI("set [%s:%s] log level to %d.\n", a, c, (int)level);
 }
 
 static void hexAsciiToBinary (const char *ptr,uint8_t *binary,int *size)
 {
-
     char ch = *ptr;
     int pos = 0;
     binary[pos] = 0;
     int first = 1;
     int found;
 
-    for(;;)
-    {
-
-        if(ch == 0)
-        {
+    for(;;) {
+        if(ch == 0) {
             *size = pos;
             return;
         }
-
-
         found = 0;
-        if (ch >= '0' && ch <= '9')
-        {
+        if (ch >= '0' && ch <= '9') {
             binary[pos] = (binary[pos] << 4) + (ch - '0');
             found = 1;
         }
-        else if (ch >= 'A' && ch <= 'F')
-        {
+        else if (ch >= 'A' && ch <= 'F') {
             binary[pos] = (binary[pos] << 4) + (ch - 'A' + 10);
             found = 1;
         }
-        else if (ch >= 'a' && ch <= 'f')
-        {
+        else if (ch >= 'a' && ch <= 'f') {
             binary[pos] = (binary[pos] << 4) + (ch - 'a' + 10);
             found = 1;
         }
-        if(found)
-        {
-            if(first)
+        if(found) {
+            if(first) {
                 first = 0;
-            else
-            {
+            }
+            else {
                 first = 1;
                 pos++;
                 if(pos>=*size)
@@ -485,19 +514,17 @@ static void hexAsciiToBinary (const char *ptr,uint8_t *binary,int *size)
                 binary[pos]=0;
             }
         }
-
         ch = *(++ptr);
     }
-
 }
 
 JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_ControlActivity_sendInject(JNIEnv *env, jobject instance, jstring apid, jstring ctid, jint sid, jstring msg, jint hex) {
 
-    char *a = (*env)->GetStringUTFChars(env, apid, NULL);
-    char *c = (*env)->GetStringUTFChars(env, ctid, NULL);
+    const char *a = (*env)->GetStringUTFChars(env, apid, NULL);
+    const char *c = (*env)->GetStringUTFChars(env, ctid, NULL);
     int s = (int)sid;
-    char *m = (*env)->GetStringUTFChars(env, msg, NULL);
+    const char *m = (*env)->GetStringUTFChars(env, msg, NULL);
 
     if(hex) {
         uint8_t buffer[1024];
@@ -515,7 +542,7 @@ Java_com_zeerd_dltviewer_ControlActivity_sendInject(JNIEnv *env, jobject instanc
 JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_SettingActivity_setEcuID(
         JNIEnv *env, jobject instance, jstring ecu_in) {
-    char *e = (*env)->GetStringUTFChars(env, ecu_in, NULL);
+    const char *e = (*env)->GetStringUTFChars(env, ecu_in, NULL);
     strncpy(ecuid, e, 4);
 
     LOGI("set ECU ID to %s.\n", ecuid);

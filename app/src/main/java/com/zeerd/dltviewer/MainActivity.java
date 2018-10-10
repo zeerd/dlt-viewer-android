@@ -13,53 +13,40 @@
 
 package com.zeerd.dltviewer;
 
-//import android.support.annotation.Keep;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.format.Formatter;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.ScrollView;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ListView;
 import android.widget.PopupMenu;
-
-import com.zeerd.dltviewer.R;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Timer;
@@ -157,11 +144,32 @@ public class MainActivity extends Activity {
         if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
             Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this));
         }
+
+        // Get the intent that started this activity
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        if(data != null) {
+
+            // Figure out what to do based on the intent type
+            if (Objects.equals(intent.getType(), "text/*")) {
+                // Handle intents with text ...
+                String dltFile = data.getPath();
+                Toast.makeText(getBaseContext(),
+                        getResources().getString(R.string.load)
+                                + " : " + dltFile,
+                        Toast.LENGTH_SHORT).show();
+
+                Log.i(TAG, "Load " + dltFile);
+                loadDltFile(dltFile);
+            }
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        Log.v(TAG, "onResume()");
 
         if(search_index > 0 && search_index < adapterLogs.getCount()) {
             Log.v(TAG, "onResume() : " + search_index);
@@ -469,6 +477,7 @@ public class MainActivity extends Activity {
     public native void setDltServerFilter(String file);
     public native void startRecordLogs(String file);
     public native void stopRecordLogs();
+    public native void loadDltFile(String dlt);
 
     private static final String TAG = "DLT-Viewer";
     private static Handler staticHandler;

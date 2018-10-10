@@ -1,3 +1,16 @@
+/*
+ * @licence app begin@
+ *
+ * Copyright (C) 2018, Charles Chan <emneg#zeerd.com>
+ *
+ * This Source Code Form is subject to the terms of the
+ * Mozilla Public License (MPL), v. 2.0.
+ * If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * @licence end@
+ */
+
 package com.zeerd.dltviewer;
 
 import android.os.Environment;

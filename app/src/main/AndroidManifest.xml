@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:a='http://schemas.android.com/apk/res/android' package='com.zeerd.dltviewer' a:versionCode='10' a:versionName='0.1.2'>
+<manifest xmlns:a='http://schemas.android.com/apk/res/android'
+    xmlns:tools="http://schemas.android.com/tools"
+    package='com.zeerd.dltviewer' a:versionCode='10' a:versionName='0.1.2'>
     <uses-permission a:name='android.permission.INTERNET'/>
     <uses-permission a:name='android.permission.WRITE_EXTERNAL_STORAGE'/>
     <uses-permission a:name="android.permission.ACCESS_WIFI_STATE" />
@@ -8,6 +10,12 @@
              <intent-filter>
                 <category a:name='android.intent.category.LAUNCHER'/>
                 <action a:name='android.intent.action.MAIN'/>
+             </intent-filter>
+             <intent-filter tools:ignore="AppLinkUrlError">
+                 <action a:name="android.intent.action.VIEW"/>
+                 <category a:name="android.intent.category.DEFAULT"/>
+                 <data a:mimeType="text/*"/>
+                 <data a:pathPattern=".*\\.dlt" />
              </intent-filter>
         </activity>
         <activity a:name=".SettingActivity"
