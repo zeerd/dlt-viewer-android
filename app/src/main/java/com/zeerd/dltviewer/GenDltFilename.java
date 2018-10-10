@@ -6,11 +6,11 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class DltFile {
+public class GenDltFilename {
 
     private String path;
 
-    DltFile(String base, String ext) {
+    GenDltFilename(String base, String ext) {
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat mdformat = new SimpleDateFormat("yyyyMMddHHmmss");

@@ -35,37 +35,23 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler {
         boolean dbg = prefs.getBoolean("com.zeerd.dltviewer.debug", true);
 
         if(dbg) {
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat mdformat = new SimpleDateFormat("yyyyMMddHHmmss");
-            String filename = "dlt-"
-                    + mdformat.format(calendar.getTime())
-                    + ".stacktrace";
             final Writer result = new StringWriter();
             final PrintWriter printWriter = new PrintWriter(result);
             e.printStackTrace(printWriter);
             String stacktrace = result.toString();
             printWriter.close();
 
-            writeToFile(stacktrace, filename);
+            writeToFile(stacktrace);
         }
 
         defaultUEH.uncaughtException(t, e);
     }
 
-    private void writeToFile(String stacktrace, String filename) {
-        final File path
-                = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS) , "/dlt");
+    private void writeToFile(String stacktrace) {
+        String filename = new GenDltFilename("dlt", "stacktrace").getPath();
 
-        // Make sure the path directory exists.
-        if(!path.exists())
-        {
-            // Make it, if it doesn't exit
-            path.mkdirs();
-        }
         try {
-            BufferedWriter bos = new BufferedWriter(new FileWriter(
-                    path + "/" + filename));
+            BufferedWriter bos = new BufferedWriter(new FileWriter(filename));
             bos.write(stacktrace);
             bos.flush();
             bos.close();

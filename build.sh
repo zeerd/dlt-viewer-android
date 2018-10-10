@@ -26,6 +26,7 @@ $JAVAC app/src/main/java/com/zeerd/dltviewer/SearchActivity.java
 $JAVAC app/src/main/java/com/zeerd/dltviewer/SettingActivity.java
 $JAVAC app/src/main/java/com/zeerd/dltviewer/HelpActivity.java
 $JAVAC app/src/main/java/com/zeerd/dltviewer/ControlActivity.java
+$JAVAC app/src/main/java/com/zeerd/dltviewer/GenDltFilename.java
 $JAVAC app/src/main/java/com/zeerd/dltviewer/LogRow.java
 $JAVAC app/src/main/java/com/zeerd/dltviewer/LogTableAdapter.java
 $JAVAC app/src/main/java/com/zeerd/dltviewer/MainActivity.java

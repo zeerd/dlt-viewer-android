@@ -195,22 +195,7 @@ public class MainActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if (checked) {
-                    Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat mdformat = new SimpleDateFormat("yyyyMMddHHmmss");
-                    File path
-                        = new File(Environment.getExternalStoragePublicDirectory(
-                                            Environment.DIRECTORY_DOWNLOADS)
-                        , "/dlt");
-                    if(!path.exists())
-                    {
-                        // Make it, if it doesn't exit
-                        path.mkdirs();
-                    }
-                    dltFile = path + "/dlt-"
-                                   + ip.getText().toString()
-                                   + "-"
-                                   + mdformat.format(calendar.getTime())
-                                   + ".dlt";
+                    dltFile = new GenDltFilename("dlt-" + ip.getText().toString(), "dlt").getPath();
                     startRecordLogs(dltFile);
                     Toast.makeText(getBaseContext(),
                             getResources().getString(R.string.start_to_save_log)
@@ -313,29 +298,10 @@ public class MainActivity extends Activity {
 
     public void writeToFile()
     {
-        // Get the directory for the user's public pictures directory.
-        final File path
-            = new File(Environment.getExternalStoragePublicDirectory(
-                                    Environment.DIRECTORY_DOWNLOADS) , "/dlt");
-
-        // Make sure the path directory exists.
-        if(!path.exists())
-        {
-            // Make it, if it doesn't exit
-            path.mkdirs();
-        }
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("yyyyMMddHHmmss");
-        String filename = "dlt-"
-                        + ip.getText().toString()
-                        + "-"
-                        + mdformat.format(calendar.getTime())
-                        + ".log";
-        final File file = new File(path, filename);
+        String filename = new GenDltFilename("dlt-" + ip.getText().toString(), "log").getPath();
+        final File file = new File(filename);
 
         // Save your stream, don't forget to flush() it before closing it.
-
         try
         {
             file.createNewFile();
@@ -359,7 +325,7 @@ public class MainActivity extends Activity {
 
             Toast.makeText(getBaseContext(),
                             getResources().getString(R.string.file_saved)
-                            + " : " + path + "/" +filename,
+                            + " : " + filename,
                             Toast.LENGTH_SHORT).show();
         }
         catch (IOException e)
