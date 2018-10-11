@@ -42,4 +42,5 @@
    <string name="default_ip">Target</string>
    <string name="default_ecu">ECUID</string>
    <string name="debug_report">Debug Report</string>
+    <string name="open">Open</string>
 </resources>

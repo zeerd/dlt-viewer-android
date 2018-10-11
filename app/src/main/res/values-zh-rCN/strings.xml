@@ -40,4 +40,5 @@
     <string name="default_ip">默认目标</string>
     <string name="default_ecu">ECUID</string>
     <string name="debug_report">调试报告</string>
+    <string name="open">打开</string>
 </resources>

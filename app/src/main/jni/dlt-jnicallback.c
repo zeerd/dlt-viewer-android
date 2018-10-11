@@ -187,12 +187,10 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 void   sendJavaMsg(JNIEnv *env, jobject instance,
                    jmethodID func,const char* msg) {
 
-    LOGI("%s %p %p %p",msg, env, instance, func);
+    // LOGI("%s %p %p %p",msg, env, instance, func);
 
     jstring javaMsg = (*env)->NewStringUTF(env, msg);
-    LOGI("%s ",msg);
     (*env)->CallVoidMethod(env, instance, func, javaMsg);
-    LOGI("%s ",msg);
     (*env)->DeleteLocalRef(env, javaMsg);
 }
 

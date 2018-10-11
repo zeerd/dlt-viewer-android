@@ -41,4 +41,5 @@
     <string name="default_ip">デフォルトIP</string>
     <string name="default_ecu">ECUID</string>
     <string name="debug_report">デバッグのレポート</string>
+    <string name="open">開いた</string>
 </resources>

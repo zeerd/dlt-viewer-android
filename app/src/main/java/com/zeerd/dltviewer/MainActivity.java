@@ -276,6 +276,13 @@ public class MainActivity extends Activity {
                         startActivity(intent);
                     }
                     return true;
+                    case R.id.open: {
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("text/*");
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        startActivityForResult(intent,1);
+                    }
+                    return true;
                     case R.id.help: {
                         Intent intent = new Intent(getBaseContext(), HelpActivity.class);
                         startActivity(intent);
@@ -287,6 +294,28 @@ public class MainActivity extends Activity {
             }
         });
         popup.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            if(uri != null) {
+                String dltFile = uri.getPath();
+                Toast.makeText(getBaseContext(),
+                        getResources().getString(R.string.load)
+                                + " : " + dltFile,
+                        Toast.LENGTH_SHORT).show();
+
+                Log.i(TAG, "Load " + dltFile);
+                loadDltFile(dltFile);
+            }
+            else {
+                Toast.makeText(getBaseContext(),
+                        "I could not work with this file manager.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void addListenerOnButton() {
