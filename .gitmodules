@@ -1,0 +1,4 @@
+[submodule "app/src/main/jni/dlt-daemon"]
+	url = https://github.com/GENIVI/dlt-daemon.git
+	path = app/src/main/jni/dlt-daemon
+	branch = refs/heads/v2.17.0
