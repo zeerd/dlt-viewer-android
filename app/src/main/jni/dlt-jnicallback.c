@@ -67,6 +67,10 @@ static DltFilter dltfilter;
 static int ohandle = 0;
 static char ecuid[4+1] = "RECV";
 static int vflag = 0;
+static char *open_file = NULL;
+
+extern JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance, jstring file);
 
 /*
  *  A helper function to show how to call
@@ -333,6 +337,8 @@ Java_com_zeerd_dltviewer_MainActivity_startLogs(JNIEnv *env, jobject instance) {
     g_ctx.running = 1;
     pthread_mutex_unlock(&g_ctx.lock);
 
+    open_file = NULL;
+
     LOGI("run start Logs from jni : %d\n", result);
 }
 
@@ -391,6 +397,10 @@ Java_com_zeerd_dltviewer_MainActivity_setDltServerFilter(
         {
             return;
         }
+    }
+
+    if(open_file != NULL) {
+        Java_com_zeerd_dltviewer_MainActivity_loadDltFile(env, instance, open_file);
     }
 }
 
@@ -451,6 +461,11 @@ Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance,
             send_message_to_java(&g_ctx, &(dlt_file.msg));
         }
     }
+
+    if(open_file != NULL) {
+        free(open_file);
+    }
+    open_file = strdup(f);
 
     dlt_file_free(&dlt_file,vflag);
 }
