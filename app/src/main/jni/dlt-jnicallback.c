@@ -445,7 +445,11 @@ Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance,
     int num;
     for (num = 0; num <= dlt_file.counter-1 ;num++) {
         dlt_file_message(&dlt_file, num, vflag);
-        send_message_to_java(&g_ctx, &(dlt_file.msg));
+
+        if(dlt_message_filter_check(&(dlt_file.msg),&(dltfilter),0) == DLT_RETURN_TRUE) {
+
+            send_message_to_java(&g_ctx, &(dlt_file.msg));
+        }
     }
 
     dlt_file_free(&dlt_file,vflag);
