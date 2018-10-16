@@ -1,7 +1,7 @@
 /*
  * @licence app begin@
  *
- * Copyright (C) 2018, Charles Chan <emneg#zeerd.com>
+ * Copyright (C) 2018, Charles Chan <charles#zeerd.com>
  *
  * This Source Code Form is subject to the terms of the
  * Mozilla Public License (MPL), v. 2.0.
@@ -14,8 +14,6 @@
 #include <string.h>
 #include <inttypes.h>
 #include <pthread.h>
-#include <jni.h>
-#include <android/log.h>
 #include <assert.h>
 
 #include <ctype.h>      /* for isprint() */
@@ -30,47 +28,19 @@
 #include <linux/limits.h> /* for PATH_MAX */
 #include <inttypes.h>
 
-#include "dlt_client.h"
+#include "dlt-jni.h"
 
-#define DLT_RECEIVE_TEXTBUFSIZE 10024  /* Size of buffer for text output */
-
-#define DLT_RECEIVE_ECU_ID "RECV"
-
-// Android log function wrappers
-static const char* kTAG = "dlt-jniCallback";
-#define LOGI(...) \
-  ((void)__android_log_print(ANDROID_LOG_INFO, kTAG, __VA_ARGS__))
-#define LOGW(...) \
-  ((void)__android_log_print(ANDROID_LOG_WARN, kTAG, __VA_ARGS__))
-#define LOGE(...) \
-  ((void)__android_log_print(ANDROID_LOG_ERROR, kTAG, __VA_ARGS__))
-
-// processing callback to handler class
-typedef struct log_context {
-    JavaVM  *javaVM;
-    jclass   jniHelperClz;
-    jobject  jniHelperObj;
-    jclass   mainActivityClz;
-    jobject  mainActivityObj;
-    pthread_mutex_t  lock;
-    int      running;
-    jmethodID statusId;
-    JNIEnv *env;
-} LogContext;
 LogContext g_ctx;
 
 static char *default_ip = "192.168.42.210";
 static char *ip = NULL;
 static pthread_t threadInfo_;
-static DltClient dltclient;
-static DltFilter dltfilter;
 static int ohandle = 0;
-static char ecuid[4+1] = "RECV";
-static int vflag = 0;
-static char *open_file = NULL;
 
-extern JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance, jstring file);
+int vflag = 0;
+char ecuid[4+1] = "RECV";
+DltClient dltclient;
+DltFilter dltfilter;
 
 /*
  *  A helper function to show how to call
@@ -139,6 +109,9 @@ void thread_exit_handler(int sig)
 }
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
+
+    UNUSED(reserved);
+
     JNIEnv* env;
     memset(&g_ctx, 0, sizeof(g_ctx));
 
@@ -240,9 +213,9 @@ int dlt_receive_message_callback(DltMessage *message, void *data)
     if(ohandle > 0) {
         struct iovec iov[2];
         iov[0].iov_base = message->headerbuffer;
-        iov[0].iov_len = message->headersize;
+        iov[0].iov_len = (__kernel_size_t) message->headersize;
         iov[1].iov_base = message->databuffer;
-        iov[1].iov_len = message->datasize;
+        iov[1].iov_len = (__kernel_size_t) message->datasize;
         writev(ohandle, iov, 2);
     }
     pthread_mutex_unlock(&g_ctx.lock);
@@ -337,7 +310,7 @@ Java_com_zeerd_dltviewer_MainActivity_startLogs(JNIEnv *env, jobject instance) {
     g_ctx.running = 1;
     pthread_mutex_unlock(&g_ctx.lock);
 
-    open_file = NULL;
+    loadedDltFile = NULL;
 
     LOGI("run start Logs from jni : %d\n", result);
 }
@@ -349,6 +322,8 @@ Java_com_zeerd_dltviewer_MainActivity_startLogs(JNIEnv *env, jobject instance) {
  */
 JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_MainActivity_stopLogs(JNIEnv *env, jobject instance) {
+
+    UNUSED(instance);
 
     LOGI("run stop Logs from jni : IN\n");
 
@@ -373,6 +348,8 @@ JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_MainActivity_setDltServerIp(
                     JNIEnv *env, jobject instance, jstring ip_in) {
 
+    UNUSED(instance);
+
     if(ip != default_ip && ip != NULL) {
         free(ip);
     }
@@ -383,37 +360,11 @@ Java_com_zeerd_dltviewer_MainActivity_setDltServerIp(
 }
 
 JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_MainActivity_setDltServerFilter(
-                    JNIEnv *env, jobject instance, jstring filter_in) {
-
-    char *filter = (*env)->GetStringUTFChars(env, filter_in, NULL);
-
-    LOGI("set filter to jni: %s\n", filter);
-
-    dlt_filter_init(&(dltfilter), 0);
-    if (filter)
-    {
-        if (dlt_filter_load(&(dltfilter), filter, 0) < DLT_RETURN_OK)
-        {
-            return;
-        }
-    }
-
-    if(open_file != NULL) {
-        Java_com_zeerd_dltviewer_MainActivity_loadDltFile(env, instance, open_file);
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_FilterActivity_setDltServerFilter(
-                    JNIEnv *env, jobject instance, jstring filter_in) {
-    Java_com_zeerd_dltviewer_MainActivity_setDltServerFilter(env, instance, filter_in);
-}
-
-JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_MainActivity_startRecordLogs(JNIEnv *env, jobject instance, jstring file_in) {
 
-    char *file = (*env)->GetStringUTFChars(env, file_in, NULL);
+    UNUSED(instance);
+
+    const char *file = (*env)->GetStringUTFChars(env, file_in, NULL);
     LOGI("start to record logs : %s.\n", file);
 
     ohandle = open(file, O_WRONLY|O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -425,6 +376,9 @@ Java_com_zeerd_dltviewer_MainActivity_startRecordLogs(JNIEnv *env, jobject insta
 JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_MainActivity_stopRecordLogs(JNIEnv *env, jobject instance) {
 
+    UNUSED(env);
+    UNUSED(instance);
+
     pthread_mutex_lock(&g_ctx.lock);
     if (ohandle)
     {
@@ -435,132 +389,3 @@ Java_com_zeerd_dltviewer_MainActivity_stopRecordLogs(JNIEnv *env, jobject instan
     LOGI("stop to record logs.\n");
 }
 
-JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance, jstring file) {
-
-    DltFile dlt_file;
-    dlt_file_init(&dlt_file, vflag);
-
-    const char *f = (*env)->GetStringUTFChars(env, file, NULL);
-    LOGI("loading dlt file : %s.\n", f);
-
-    if (dlt_file_open(&dlt_file, f, vflag) >= DLT_RETURN_OK) {
-        while (dlt_file_read(&dlt_file, vflag) >= DLT_RETURN_OK) {
-        }
-    }
-    else {
-        LOGE("load dlt file failed : %s.\n", f);
-    }
-
-    int num;
-    for (num = 0; num <= dlt_file.counter-1 ;num++) {
-        dlt_file_message(&dlt_file, num, vflag);
-
-        if(dlt_message_filter_check(&(dlt_file.msg),&(dltfilter),0) == DLT_RETURN_TRUE) {
-
-            send_message_to_java(&g_ctx, &(dlt_file.msg));
-        }
-    }
-
-    if(open_file != NULL) {
-        free(open_file);
-    }
-    open_file = strdup(f);
-
-    dlt_file_free(&dlt_file,vflag);
-}
-
-JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_ControlActivity_setDefaultLevel(JNIEnv *env, jobject instance, jint level) {
-
-    dlt_client_send_default_log_level(&dltclient, (int)level);
-    LOGI("set default log level to %d.\n", (int)level);
-}
-
-JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_ControlActivity_setAllLevel(JNIEnv *env, jobject instance, jint level) {
-
-    dlt_client_send_all_log_level(&dltclient, (int)level);
-    LOGI("set all log level to %d.\n", (int)level);
-}
-
-JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_ControlActivity_setLevel(JNIEnv *env, jobject instance, jstring apid, jstring ctid, jint level) {
-
-    const char *a = (*env)->GetStringUTFChars(env, apid, NULL);
-    const char *c = (*env)->GetStringUTFChars(env, ctid, NULL);
-    dlt_client_send_log_level(&dltclient, a, c, (int)level);
-    LOGI("set [%s:%s] log level to %d.\n", a, c, (int)level);
-}
-
-static void hexAsciiToBinary (const char *ptr,uint8_t *binary,int *size)
-{
-    char ch = *ptr;
-    int pos = 0;
-    binary[pos] = 0;
-    int first = 1;
-    int found;
-
-    for(;;) {
-        if(ch == 0) {
-            *size = pos;
-            return;
-        }
-        found = 0;
-        if (ch >= '0' && ch <= '9') {
-            binary[pos] = (binary[pos] << 4) + (ch - '0');
-            found = 1;
-        }
-        else if (ch >= 'A' && ch <= 'F') {
-            binary[pos] = (binary[pos] << 4) + (ch - 'A' + 10);
-            found = 1;
-        }
-        else if (ch >= 'a' && ch <= 'f') {
-            binary[pos] = (binary[pos] << 4) + (ch - 'a' + 10);
-            found = 1;
-        }
-        if(found) {
-            if(first) {
-                first = 0;
-            }
-            else {
-                first = 1;
-                pos++;
-                if(pos>=*size)
-                    return;
-                binary[pos]=0;
-            }
-        }
-        ch = *(++ptr);
-    }
-}
-
-JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_ControlActivity_sendInject(JNIEnv *env, jobject instance, jstring apid, jstring ctid, jint sid, jstring msg, jint hex) {
-
-    const char *a = (*env)->GetStringUTFChars(env, apid, NULL);
-    const char *c = (*env)->GetStringUTFChars(env, ctid, NULL);
-    int s = (int)sid;
-    const char *m = (*env)->GetStringUTFChars(env, msg, NULL);
-
-    if(hex) {
-        uint8_t buffer[1024];
-        int size = 1024;
-        hexAsciiToBinary(m, buffer, &size);
-        dlt_client_send_inject_msg(&dltclient, a, c, s, buffer,size);
-    }
-    else {
-        dlt_client_send_inject_msg(&dltclient, a, c, s, (uint8_t*)m, strlen(m));
-    }
-
-    LOGI("send inject message to [%s:%s:%d] : %s.\n", a, c, s, m);
-}
-
-JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_SettingActivity_setEcuID(
-        JNIEnv *env, jobject instance, jstring ecu_in) {
-    const char *e = (*env)->GetStringUTFChars(env, ecu_in, NULL);
-    strncpy(ecuid, e, 4);
-
-    LOGI("set ECU ID to %s.\n", ecuid);
-}
