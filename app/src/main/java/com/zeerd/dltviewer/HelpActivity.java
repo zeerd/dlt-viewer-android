@@ -29,9 +29,9 @@ public class HelpActivity extends Activity {
 
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            ((TextView)HelpActivity.this.findViewById(R.id.name)).setText(String.format(
+            ((TextView)HelpActivity.this.findViewById(R.id.version)).setText(String.format(
                                         "%s %s",
-                                        getResources().getString(R.string.dlt_viewer_for_android),
+                                        getResources().getString(R.string.version),
                                         packageInfo.versionName));
         } catch (NameNotFoundException e) {
             ((TextView)HelpActivity.this.findViewById(R.id.name)).setText(

@@ -13,7 +13,7 @@
 
 package com.zeerd.dltviewer;
 
-public class LogRow {
+class LogRow {
 
     static final int ROW_INDEX = 0;
     static final int ROW_TIMESTAMP = 1;
@@ -48,9 +48,9 @@ public class LogRow {
     String getColumn(int index) {
         return column[index];
     }
-    public void setColumn(int index, String str) {
-        this.column[index] = str;
-    }
+    //public void setColumn(int index, String str) {
+    //    this.column[index] = str;
+    //}
 
     int getIndex() {
         return Integer.parseInt(this.column[ROW_INDEX]);

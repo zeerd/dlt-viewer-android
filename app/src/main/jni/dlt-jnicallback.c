@@ -11,7 +11,6 @@
  * @licence end@
  */
 
-#include <string.h>
 #include <inttypes.h>
 #include <pthread.h>
 #include <assert.h>
@@ -22,7 +21,6 @@
 #include <fcntl.h>      /* for open() */
 #include <sys/uio.h>    /* for writev() */
 #include <errno.h>
-#include <string.h>
 #include <glob.h>
 #include <syslog.h>
 #include <linux/limits.h> /* for PATH_MAX */

@@ -209,7 +209,7 @@ public class FilterActivity extends Activity {
         File file = new File(filterPath, filterName + ".filter");
 
         //Read text from file
-        StringBuilder text = new StringBuilder();
+        // StringBuilder text = new StringBuilder();
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));

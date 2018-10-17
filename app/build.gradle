@@ -1,4 +1,35 @@
 apply plugin: 'com.android.application'
+
+def getGitVersionCode = {
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-list', '--first-parent', '--count', 'master'
+            standardOutput = stdout
+        }
+        return Integer.parseInt(stdout.toString().trim())
+    }
+    catch (ignored) {
+        return -1
+    }
+}
+
+def getGitVersionName = {
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            workingDir projectDir
+            executable 'git'
+            args 'rev-parse', '--short', 'HEAD'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    }
+    catch (ignored) {
+        return ""
+    }
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "28.0.3"
@@ -8,6 +39,9 @@ android {
             moduleName "dlt-jnicallback"
         }
         minSdkVersion 23
+
+        versionCode getGitVersionCode()
+        versionName "0.1.2-" + getGitVersionName() + "-r" + getGitVersionCode()
     }
     buildTypes {
         release {

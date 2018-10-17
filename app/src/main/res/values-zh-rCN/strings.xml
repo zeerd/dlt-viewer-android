@@ -41,4 +41,5 @@
     <string name="default_ecu">ECUID</string>
     <string name="debug_report">调试报告</string>
     <string name="open">打开</string>
+    <string name="version">版本</string>
 </resources>
