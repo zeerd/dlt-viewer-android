@@ -24,7 +24,6 @@
 #include <glob.h>
 #include <syslog.h>
 #include <linux/limits.h> /* for PATH_MAX */
-#include <inttypes.h>
 
 #include "dlt-jni.h"
 
@@ -133,7 +132,11 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
                                                  "updateStatus",
                                                  "(Ljava/lang/String;)V");
 
-    (*(g_ctx.javaVM))->GetEnv(g_ctx.javaVM, (void**)&(g_ctx.env), JNI_VERSION_1_6);
+    g_ctx.loadDltId = (*env)->GetMethodID(env, g_ctx.jniHelperClz,
+                                                    "loadDltFileStatus",
+                                                    "(Ljava/lang/String;)V");
+    //(*(g_ctx.javaVM))->GetEnv(g_ctx.javaVM, (void**)&(g_ctx.env), JNI_VERSION_1_6);
+    g_ctx.env = env;
 
     g_ctx.running = 0;
     g_ctx.mainActivityObj = NULL;
@@ -180,7 +183,13 @@ void send_message_to_java(LogContext *pctx, DltMessage *message) {
     sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, "payload");
     sendJavaMsg(pctx->env, pctx->jniHelperObj, pctx->statusId, text);
 
-    LOGI("send_message_to_java : %s\n", text);
+    // LOGI("send_message_to_java : %s\n", text);
+}
+
+void send_dlt_load_status_to_java(LogContext *pctx, const char* file) {
+    jstring javaMsg = (*pctx->env)->NewStringUTF(pctx->env, file);
+    (*(pctx->env))->CallVoidMethod(pctx->env, pctx->jniHelperObj, pctx->loadDltId, javaMsg);
+    (*pctx->env)->DeleteLocalRef(pctx->env, javaMsg);
 }
 
 int dlt_receive_message_callback(DltMessage *message, void *data)

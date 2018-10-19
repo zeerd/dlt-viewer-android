@@ -12,25 +12,38 @@
  */
 
 #include <malloc.h>
+#include <pthread.h>
+#include <assert.h>
 #include "dlt-jni.h"
 
-JNIEXPORT void JNICALL
-Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance, jstring file) {
+/*
+ * Main working thread function. From a pthread,
+ *     calling back to MainActivity::updateStatus(String msg) for msg
+ */
+static void*  loadDltFileThread(void* context) {
 
-    UNUSED(instance);
+    JavaVM *javaVM = g_ctx.javaVM;
+
+    LOGI("enter load dlt file from jni\n");
+
+    jint res = (*javaVM)->GetEnv(javaVM, (void**)&(g_ctx.env), JNI_VERSION_1_6);
+    if (res != JNI_OK) {
+        res = (*javaVM)->AttachCurrentThread(javaVM, &(g_ctx.env), NULL);
+        if (JNI_OK != res) {
+            LOGE("Failed to AttachCurrentThread, ErrorCode = %d", res);
+            return NULL;
+        }
+    }
 
     DltFile dlt_file;
     dlt_file_init(&dlt_file, vflag);
 
-    const char *f = (*env)->GetStringUTFChars(env, file, NULL);
-    LOGI("loading dlt file : %s.\n", f);
-
-    if (dlt_file_open(&dlt_file, f, vflag) >= DLT_RETURN_OK) {
+    if (dlt_file_open(&dlt_file, loadedDltFile, vflag) >= DLT_RETURN_OK) {
         while (dlt_file_read(&dlt_file, vflag) >= DLT_RETURN_OK) {
         }
     }
     else {
-        LOGE("load dlt file failed : %s.\n", f);
+        LOGE("load dlt file failed : %s.\n", loadedDltFile);
     }
 
     int num;
@@ -43,10 +56,39 @@ Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance,
         }
     }
 
+    dlt_file_free(&dlt_file,vflag);
+
+    send_dlt_load_status_to_java(&g_ctx, loadedDltFile);
+
+    (*javaVM)->DetachCurrentThread(javaVM);
+
+    LOGI("quit load dlt file from jni\n");
+    return context;
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance, jstring file) {
+
+    UNUSED(instance);
+
+    const char *f = (*env)->GetStringUTFChars(env, file, NULL);
+    LOGI("loading dlt file : %s.\n", f);
+
     if(loadedDltFile != NULL) {
         free(loadedDltFile);
     }
     loadedDltFile = strdup(f);
 
-    dlt_file_free(&dlt_file,vflag);
+    pthread_attr_t  threadAttr_;
+
+    pthread_attr_init(&threadAttr_);
+    pthread_attr_setdetachstate(&threadAttr_, PTHREAD_CREATE_DETACHED);
+
+    pthread_t threadInfo_;
+    int result  = pthread_create( &threadInfo_, &threadAttr_, loadDltFileThread, NULL);
+    assert(result == 0);
+
+    pthread_attr_destroy(&threadAttr_);
+
+    (void)result;
 }

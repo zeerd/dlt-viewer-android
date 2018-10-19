@@ -46,6 +46,7 @@ typedef struct log_context {
     pthread_mutex_t  lock;
     int      running;
     jmethodID statusId;
+    jmethodID loadDltId;
     JNIEnv *env;
 } LogContext;
 
@@ -59,6 +60,7 @@ extern DltFilter dltfilter;
 extern DltClient dltclient;
 
 extern void send_message_to_java(LogContext *pctx, DltMessage *message);
+extern void send_dlt_load_status_to_java(LogContext *pctx, const char* file);
 
 extern JNIEXPORT void JNICALL
 Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance, jstring file);

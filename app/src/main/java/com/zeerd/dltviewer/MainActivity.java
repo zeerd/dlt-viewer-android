@@ -64,6 +64,8 @@ public class MainActivity extends Activity {
     private LogTableAdapter adapterLogs;
     private TableInitTask initTask;
 
+    public boolean dltFileOpenning;
+
     public static List<LogRow> rtLogsList;
     public static int search_index;
 
@@ -145,6 +147,8 @@ public class MainActivity extends Activity {
             Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this));
         }
 
+        dltFileOpenning = false;
+
         // Get the intent that started this activity
         Intent intent = getIntent();
         Uri data = intent.getData();
@@ -154,12 +158,8 @@ public class MainActivity extends Activity {
             if (Objects.equals(intent.getType(), "text/*")) {
                 // Handle intents with text ...
                 String dltFile = data.getPath();
-                Toast.makeText(getBaseContext(),
-                        getResources().getString(R.string.load)
-                                + " : " + dltFile,
-                        Toast.LENGTH_SHORT).show();
-
                 Log.i(TAG, "Load " + dltFile);
+                dltFileOpenning = true;
                 loadDltFile(dltFile);
             }
         }
@@ -293,6 +293,13 @@ public class MainActivity extends Activity {
                 }
             }
         });
+        MenuItem open = popup.getMenu().findItem(R.id.open);
+        if(dltFileOpenning) {
+            open.setTitle(R.string.stop);
+        }
+        else {
+            open.setTitle(R.string.open);
+        }
         popup.show();
     }
 
@@ -302,12 +309,8 @@ public class MainActivity extends Activity {
             Uri uri = data.getData();
             if(uri != null) {
                 String dltFile = uri.getPath();
-                Toast.makeText(getBaseContext(),
-                        getResources().getString(R.string.load)
-                                + " : " + dltFile,
-                        Toast.LENGTH_SHORT).show();
-
                 Log.i(TAG, "Load " + dltFile);
+                dltFileOpenning = true;
                 loadDltFile(dltFile);
             }
             else {
@@ -526,6 +529,19 @@ public class MainActivity extends Activity {
         bundle.putString("msg", txt);
         msg.setData(bundle);
         staticHandler.sendMessage(msg);
+    }
+
+    public void loadDltFileStatus(final String file) {
+        dltFileOpenning = false;
+        Log.i(TAG, "Loaded " + file);
+//        runOnUiThread(new Runnable() {
+//            public void run() {
+//                Toast.makeText(getBaseContext(),
+//                        getResources().getString(R.string.load)
+//                                + " : " + file,
+//                        Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     /*

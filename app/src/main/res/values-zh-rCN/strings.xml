@@ -42,4 +42,5 @@
     <string name="debug_report">调试报告</string>
     <string name="open">打开</string>
     <string name="version">版本</string>
+   <string name="stop">停止</string>
 </resources>
