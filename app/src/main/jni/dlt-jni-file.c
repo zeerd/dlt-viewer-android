@@ -16,6 +16,8 @@
 #include <assert.h>
 #include "dlt-jni.h"
 
+static int running = 0;
+
 /*
  * Main working thread function. From a pthread,
  *     calling back to MainActivity::updateStatus(String msg) for msg
@@ -35,11 +37,13 @@ static void*  loadDltFileThread(void* context) {
         }
     }
 
+    running = 1;
+
     DltFile dlt_file;
     dlt_file_init(&dlt_file, vflag);
 
     if (dlt_file_open(&dlt_file, loadedDltFile, vflag) >= DLT_RETURN_OK) {
-        while (dlt_file_read(&dlt_file, vflag) >= DLT_RETURN_OK) {
+        while (dlt_file_read(&dlt_file, vflag) >= DLT_RETURN_OK  && running) {
         }
     }
     else {
@@ -47,7 +51,7 @@ static void*  loadDltFileThread(void* context) {
     }
 
     int num;
-    for (num = 0; num <= dlt_file.counter-1 ;num++) {
+    for (num = 0; (num <= dlt_file.counter-1 && running);num++) {
         dlt_file_message(&dlt_file, num, vflag);
 
         if(dlt_message_filter_check(&(dlt_file.msg),&(dltfilter),0) == DLT_RETURN_TRUE) {
@@ -63,6 +67,7 @@ static void*  loadDltFileThread(void* context) {
     (*javaVM)->DetachCurrentThread(javaVM);
 
     LOGI("quit load dlt file from jni\n");
+    running = 0;
     return context;
 }
 
@@ -91,4 +96,14 @@ Java_com_zeerd_dltviewer_MainActivity_loadDltFile(JNIEnv *env, jobject instance,
     pthread_attr_destroy(&threadAttr_);
 
     (void)result;
+}
+
+JNIEXPORT void JNICALL
+Java_com_zeerd_dltviewer_MainActivity_stoploadingDltFile(JNIEnv *env, jobject instance) {
+
+    UNUSED(env);
+    UNUSED(instance);
+
+    LOGI("stop loading dlt file.\n");
+    running = 0;
 }

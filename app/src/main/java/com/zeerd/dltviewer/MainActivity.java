@@ -141,7 +141,7 @@ public class MainActivity extends Activity {
                 initTask.execute();
             }
         };
-        timer.scheduleAtFixedRate(t,500,500);
+        timer.scheduleAtFixedRate(t,0,500);
 
         if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
             Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this));
@@ -171,7 +171,10 @@ public class MainActivity extends Activity {
 
         Log.v(TAG, "onResume()");
 
-        if(search_index > 0 && search_index < adapterLogs.getCount()) {
+        if(search_index > 0) {
+            if(search_index > adapterLogs.getCount()) {
+                search_index = adapterLogs.getCount();
+            }
             Log.v(TAG, "onResume() : " + search_index);
             checkBox.setChecked(false);
             listviewLogTable.clearFocus();
@@ -277,10 +280,15 @@ public class MainActivity extends Activity {
                     }
                     return true;
                     case R.id.open: {
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.setType("text/*");
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        startActivityForResult(intent,1);
+                        if(dltFileOpenning) {
+                            stoploadingDltFile();
+                        }
+                        else {
+                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            intent.setType("text/*");
+                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+                            startActivityForResult(intent, 1);
+                        }
                     }
                     return true;
                     case R.id.help: {
@@ -487,9 +495,18 @@ public class MainActivity extends Activity {
                 @Override
                 public void handleMessage(Message msg) {
                     Bundle bundle = msg.getData();
-                    String string = bundle.getString("msg");
+                    final String string = bundle.getString("msg");
 
-                    parseMessages(string);
+                    dltFileOpenning = false;
+                    Log.i(TAG, "Loaded " + string);
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getBaseContext(),
+                                    getResources().getString(R.string.load)
+                                            + " : " + string,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
                 }
             };
@@ -510,6 +527,7 @@ public class MainActivity extends Activity {
     public native void startRecordLogs(String file);
     public native void stopRecordLogs();
     public native void loadDltFile(String dlt);
+    public native void stoploadingDltFile();
 
     private static final String TAG = "DLT-Viewer";
     private static Handler staticHandler;
@@ -524,24 +542,15 @@ public class MainActivity extends Activity {
         // } else {
         //     Log.i(TAG, "Native Msg: " + txt);
         // }
-        Message msg = staticHandler.obtainMessage();
-        Bundle bundle = new Bundle();
-        bundle.putString("msg", txt);
-        msg.setData(bundle);
-        staticHandler.sendMessage(msg);
+        parseMessages(txt);
     }
 
     public void loadDltFileStatus(final String file) {
-        dltFileOpenning = false;
-        Log.i(TAG, "Loaded " + file);
-//        runOnUiThread(new Runnable() {
-//            public void run() {
-//                Toast.makeText(getBaseContext(),
-//                        getResources().getString(R.string.load)
-//                                + " : " + file,
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        Message msg = staticHandler.obtainMessage();
+        Bundle bundle = new Bundle();
+        bundle.putString("msg", file);
+        msg.setData(bundle);
+        staticHandler.sendMessage(msg);
     }
 
     /*
