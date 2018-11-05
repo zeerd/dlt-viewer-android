@@ -41,7 +41,7 @@ android {
         minSdkVersion 23
 
         versionCode getGitVersionCode()
-        versionName "0.1.2-" + getGitVersionName() + "-r" + getGitVersionCode()
+        versionName "0.2."+getGitVersionCode()+"-" + getGitVersionName()
     }
     buildTypes {
         release {
